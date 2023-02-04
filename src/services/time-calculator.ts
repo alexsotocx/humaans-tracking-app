@@ -1,6 +1,8 @@
 import { Days, PublicHoliday, TimeEntry, TimeOffEntry } from "../types/models";
 
 export const ONE_HOUR_MS = 60 * 60 * 1000;
+export const ONE_DAY_MS = ONE_HOUR_MS * 24;
+
 export type WorkingHoursPerDay = Record<string, number | undefined>;
 export type ReadableWorkingTime = { hours: number; minutes: number };
 export type CalculatedTimeResponsePerDay = {
@@ -38,16 +40,17 @@ function mapDateToDay(date: string): Days {
   return days[dateIndex];
 }
 
-// function calculateDifference() {
-//   const difference = expectedMsWorkingPerDay - workedTimePerDay[day];
-//   if (difference > 0) {
-//     workedTimePerDay[day].missing = convertToReadableTime(difference);
-//   }
-//   if (difference < 0) {
-//     const extra = difference * -1;
-//     workedTimePerDay[day].extra = convertToReadableTime(extra);
-//   }
-// }
+function calculateDifference(
+  expected: number,
+  worked: number
+): Pick<CalculatedTimeResponsePerDay, "extra" | "missing"> {
+  const difference = expected - worked;
+
+  return {
+    missing: difference > 0 ? convertToReadableTime(difference) : null,
+    extra: difference < 0 ? convertToReadableTime(difference * -1) : null,
+  };
+}
 
 function findExpectedWorkingTime(params: {
   date: string;
@@ -63,31 +66,44 @@ function findExpectedWorkingTime(params: {
   );
 }
 
+export function getListOfDays(startDate: string, endDate: string): string[] {
+  let dateIterator = new Date(startDate);
+  const dates: string[] = [];
+  const endDateObject = new Date(endDate);
+
+  while (dateIterator <= endDateObject) {
+    dates.push(extractDatePortion(dateIterator));
+    dateIterator = new Date(dateIterator.getTime() + ONE_DAY_MS);
+  }
+
+  return dates;
+}
+
+function groupTimeEntriesPerDay(
+  timeEntries: TimeEntry[]
+): Record<string, TimeEntry[]> {
+  const timeEntriesPerDay: Record<string, TimeEntry[]> = {};
+
+  timeEntries.forEach((entry) => {
+    if (!entry.endTime) {
+      return;
+    }
+    if (!timeEntriesPerDay[entry.date]) timeEntriesPerDay[entry.date] = [];
+    timeEntriesPerDay[entry.date].push(entry);
+  });
+
+  return timeEntriesPerDay;
+}
+
 export function calculateTime(param: {
+  startingDate: string;
+  endDate: string;
   publicHolidays: PublicHoliday[];
   holidays: TimeOffEntry[];
   workingHoursPerDay: WorkingHoursPerDay;
   timeEntries: TimeEntry[];
 }) {
-  const days: Record<string, TimeEntry[]> = {};
-  let minimumEntryDate = Number.MAX_SAFE_INTEGER;
-  let maximumEntryDate = 0;
-
-  param.timeEntries.forEach((entry) => {
-    maximumEntryDate = Math.max(
-      maximumEntryDate,
-      new Date(entry.date).getTime()
-    );
-    minimumEntryDate = Math.min(
-      minimumEntryDate,
-      new Date(entry.date).getTime()
-    );
-    if (!entry.endTime) {
-      return;
-    }
-    if (!days[entry.date]) days[entry.date] = [];
-    days[entry.date].push(entry);
-  });
+  const timeEntriesPerDay = groupTimeEntriesPerDay(param.timeEntries);
 
   const workedTimePerDay: Record<
     string,
@@ -97,10 +113,12 @@ export function calculateTime(param: {
     }
   > = {};
 
-  Object.entries(days).forEach(([day, entries]) => {
+  getListOfDays(param.startingDate, param.endDate).forEach((day) => {
+    const entries = timeEntriesPerDay[day] || [];
     const totalWorked = entries.reduce((total, entry) => {
       return total + (entry.endTime!.getTime() - entry.startTime.getTime());
     }, 0);
+
     workedTimePerDay[day] = {
       expected: findExpectedWorkingTime({
         date: day,
@@ -115,25 +133,16 @@ export function calculateTime(param: {
   return {
     workedTimePerDay: Object.entries(workedTimePerDay).reduce(
       (res, [day, { expected, total }]) => {
-        const difference = expected - total;
-        let missing: CalculatedTimeResponsePerDay["missing"] = null;
-        let extra: CalculatedTimeResponsePerDay["extra"] = null;
-        if (difference > 0) {
-          missing = convertToReadableTime(difference);
-        } else if (difference < 0) {
-          extra = convertToReadableTime(difference * -1);
-        }
         res[day] = {
           expected: convertToReadableTime(expected),
           worked: convertToReadableTime(total),
-          missing,
-          extra,
+          ...calculateDifference(expected, total),
         };
         return res;
       },
       {} as Record<string, CalculatedTimeResponsePerDay>
     ),
-    minimumEntryDate: extractDatePortion(new Date(minimumEntryDate)),
-    maximumEntryDate: extractDatePortion(new Date(maximumEntryDate)),
+    minimumEntryDate: param.startingDate,
+    maximumEntryDate: param.endDate,
   };
 }
