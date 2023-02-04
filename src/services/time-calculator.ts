@@ -7,9 +7,9 @@ export type WorkingHoursPerDay = Record<string, number | undefined>;
 export type ReadableWorkingTime = { hours: number; minutes: number };
 export type CalculatedTimeResponsePerDay = {
   expected: ReadableWorkingTime;
-  worked: ReadableWorkingTime;
-  missing: null | ReadableWorkingTime;
-  extra: null | ReadableWorkingTime;
+  totalWorked: ReadableWorkingTime;
+  missing: ReadableWorkingTime;
+  extra: ReadableWorkingTime;
 };
 
 export function convertToReadableTime(ms: number): ReadableWorkingTime {
@@ -45,10 +45,11 @@ function calculateDifference(
   worked: number
 ): Pick<CalculatedTimeResponsePerDay, "extra" | "missing"> {
   const difference = expected - worked;
+  const empty = { hours: 0, minutes: 0 };
 
   return {
-    missing: difference > 0 ? convertToReadableTime(difference) : null,
-    extra: difference < 0 ? convertToReadableTime(difference * -1) : null,
+    missing: difference > 0 ? convertToReadableTime(difference) : empty,
+    extra: difference < 0 ? convertToReadableTime(difference * -1) : empty,
   };
 }
 
@@ -58,12 +59,28 @@ function findExpectedWorkingTime(params: {
   publicHolidays: PublicHoliday[];
   timeOffEntries: TimeOffEntry[];
 }): number {
-  // const isPublicHoliday = params.publicHolidays.some(p => p.date === params.date);
-  // if (isPublicHoliday) return 0;
-
-  return (
-    (params.workingHoursPerDay[mapDateToDay(params.date)] || 0) * ONE_HOUR_MS
+  const expectedWorkHours =
+    (params.workingHoursPerDay[mapDateToDay(params.date)] || 0) * ONE_HOUR_MS;
+  const isPublicHoliday = params.publicHolidays.some(
+    (p) => p.date === params.date
   );
+  if (isPublicHoliday) return 0;
+
+  for (const entry of params.timeOffEntries) {
+    const matchingEntry = getListOfDays(entry.startDate, entry.endDate).find(
+      (holidayDate) => holidayDate === params.date
+    );
+    if (matchingEntry) {
+      if (matchingEntry === entry.startDate && entry.startDatePeriod !== "full")
+        return expectedWorkHours / 2;
+
+      if (matchingEntry === entry.endDate && entry.startDatePeriod !== "full")
+        return expectedWorkHours / 2;
+      return 0;
+    }
+  }
+
+  return expectedWorkHours;
 }
 
 export function getListOfDays(startDate: string, endDate: string): string[] {
@@ -135,7 +152,7 @@ export function calculateTime(param: {
       (res, [day, { expected, total }]) => {
         res[day] = {
           expected: convertToReadableTime(expected),
-          worked: convertToReadableTime(total),
+          totalWorked: convertToReadableTime(total),
           ...calculateDifference(expected, total),
         };
         return res;

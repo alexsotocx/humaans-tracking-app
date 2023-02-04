@@ -13,6 +13,12 @@ import {
 describe("timeUtils", () => {
   const february2_8AM = new Date("2023-02-02T08:00:00.000Z");
 
+  const timeTracking1 = Factory.build<TimeEntry>(
+    TIME_ENTRY_FACT_NAME,
+    { startTime: february2_8AM },
+    { entryLong: ONE_HOUR_MS * 2 }
+  );
+
   describe("extractDatePortion", () => {
     it("returns the date portion of the date object", () => {
       expect(extractDatePortion(february2_8AM)).toEqual("2023-02-02");
@@ -67,10 +73,10 @@ describe("timeUtils", () => {
       const workingTime =
         response.workedTimePerDay[extractDatePortion(february2_8AM)];
 
-      expect(workingTime.worked).toEqual({ hours: 4, minutes: 0 });
+      expect(workingTime.totalWorked).toEqual({ hours: 4, minutes: 0 });
       expect(workingTime.missing).toEqual({ hours: 4, minutes: 0 });
       expect(workingTime.expected).toEqual({ hours: 8, minutes: 0 });
-      expect(workingTime.extra).toEqual(null);
+      expect(workingTime.extra).toEqual({ hours: 0, minutes: 0 });
     });
 
     describe("when the time tracked is greater than the expected working hours", () => {
@@ -93,8 +99,8 @@ describe("timeUtils", () => {
         const workingTime =
           response.workedTimePerDay[extractDatePortion(february2_8AM)];
 
-        expect(workingTime.worked).toEqual({ hours: 10, minutes: 30 });
-        expect(workingTime.missing).toEqual(null);
+        expect(workingTime.totalWorked).toEqual({ hours: 10, minutes: 30 });
+        expect(workingTime.missing).toEqual({ hours: 0, minutes: 0 });
         expect(workingTime.extra).toEqual({ hours: 2, minutes: 30 });
       });
     });
@@ -102,12 +108,6 @@ describe("timeUtils", () => {
     describe("when day is a not working day", () => {
       describe("with an time tracking entry", () => {
         it("counts the time as extra time", () => {
-          const timeTracking1 = Factory.build<TimeEntry>(
-            TIME_ENTRY_FACT_NAME,
-            { startTime: february2_8AM },
-            { entryLong: ONE_HOUR_MS * 2 }
-          );
-
           const response = calculateTime({
             timeEntries: [timeTracking1],
             workingHoursPerDay: {},
@@ -120,8 +120,8 @@ describe("timeUtils", () => {
           const workingTime =
             response.workedTimePerDay[extractDatePortion(february2_8AM)];
 
-          expect(workingTime.worked).toEqual({ hours: 2, minutes: 0 });
-          expect(workingTime.missing).toEqual(null);
+          expect(workingTime.totalWorked).toEqual({ hours: 2, minutes: 0 });
+          expect(workingTime.missing).toEqual({ hours: 0, minutes: 0 });
           expect(workingTime.expected).toEqual({ hours: 0, minutes: 0 });
           expect(workingTime.extra).toEqual({ hours: 2, minutes: 0 });
         });
@@ -140,27 +140,113 @@ describe("timeUtils", () => {
         const workingTime =
           response.workedTimePerDay[extractDatePortion(february2_8AM)];
 
-        expect(workingTime.worked).toEqual({ hours: 0, minutes: 0 });
-        expect(workingTime.missing).toEqual(null);
+        expect(workingTime.totalWorked).toEqual({ hours: 0, minutes: 0 });
+        expect(workingTime.missing).toEqual({ hours: 0, minutes: 0 });
         expect(workingTime.expected).toEqual({ hours: 0, minutes: 0 });
-        expect(workingTime.extra).toEqual(null);
+        expect(workingTime.extra).toEqual({ hours: 0, minutes: 0 });
       });
     });
 
     describe("when there is public holiday", () => {
       describe("with an time tracking entry", () => {
-        it("counts the time as extra time", () => {});
+        it("counts the time as extra time", () => {
+          const response = calculateTime({
+            timeEntries: [timeTracking1],
+            workingHoursPerDay: { [Days.Thursday]: 8 },
+            holidays: [],
+            publicHolidays: [
+              { date: extractDatePortion(february2_8AM), name: "Test Holiday" },
+            ],
+            startingDate: extractDatePortion(february2_8AM),
+            endDate: extractDatePortion(february2_8AM),
+          });
+
+          const workingTime =
+            response.workedTimePerDay[extractDatePortion(february2_8AM)];
+
+          expect(workingTime.totalWorked).toEqual({ hours: 2, minutes: 0 });
+          expect(workingTime.missing).toEqual({ hours: 0, minutes: 0 });
+          expect(workingTime.expected).toEqual({ hours: 0, minutes: 0 });
+          expect(workingTime.extra).toEqual({ hours: 2, minutes: 0 });
+        });
       });
 
-      it("does not count to the not working hours", () => {});
+      it("does not count to the not working hours", () => {
+        const response = calculateTime({
+          timeEntries: [],
+          workingHoursPerDay: { [Days.Thursday]: 8 },
+          holidays: [],
+          publicHolidays: [
+            { date: extractDatePortion(february2_8AM), name: "Test Holiday" },
+          ],
+          startingDate: extractDatePortion(february2_8AM),
+          endDate: extractDatePortion(february2_8AM),
+        });
+
+        const workingTime =
+          response.workedTimePerDay[extractDatePortion(february2_8AM)];
+
+        expect(workingTime.totalWorked).toEqual({ hours: 0, minutes: 0 });
+        expect(workingTime.missing).toEqual({ hours: 0, minutes: 0 });
+        expect(workingTime.expected).toEqual({ hours: 0, minutes: 0 });
+        expect(workingTime.extra).toEqual({ hours: 0, minutes: 0 });
+      });
     });
 
     describe("when there is paid off day", () => {
       describe("with an time tracking entry", () => {
-        it("counts the time as extra time", () => {});
+        it("counts the time as extra time", () => {
+          const response = calculateTime({
+            timeEntries: [timeTracking1],
+            workingHoursPerDay: { [Days.Thursday]: 8 },
+            holidays: [
+              {
+                endDate: extractDatePortion(february2_8AM),
+                endDatePeriod: "full",
+                startDate: extractDatePortion(february2_8AM),
+                startDatePeriod: "full",
+              },
+            ],
+            publicHolidays: [],
+            startingDate: extractDatePortion(february2_8AM),
+            endDate: extractDatePortion(february2_8AM),
+          });
+
+          const workingTime =
+            response.workedTimePerDay[extractDatePortion(february2_8AM)];
+
+          expect(workingTime.totalWorked).toEqual({ hours: 2, minutes: 0 });
+          expect(workingTime.missing).toEqual({ hours: 0, minutes: 0 });
+          expect(workingTime.expected).toEqual({ hours: 0, minutes: 0 });
+          expect(workingTime.extra).toEqual({ hours: 2, minutes: 0 });
+        });
       });
 
-      it("does not count to the not working hours", () => {});
+      it("does not count to the not working hours", () => {
+        const response = calculateTime({
+          timeEntries: [],
+          workingHoursPerDay: { [Days.Thursday]: 8 },
+          holidays: [
+            {
+              endDate: extractDatePortion(february2_8AM),
+              endDatePeriod: "full",
+              startDate: extractDatePortion(february2_8AM),
+              startDatePeriod: "full",
+            },
+          ],
+          publicHolidays: [],
+          startingDate: extractDatePortion(february2_8AM),
+          endDate: extractDatePortion(february2_8AM),
+        });
+
+        const workingTime =
+          response.workedTimePerDay[extractDatePortion(february2_8AM)];
+
+        expect(workingTime.totalWorked).toEqual({ hours: 0, minutes: 0 });
+        expect(workingTime.missing).toEqual({ hours: 0, minutes: 0 });
+        expect(workingTime.expected).toEqual({ hours: 0, minutes: 0 });
+        expect(workingTime.extra).toEqual({ hours: 0, minutes: 0 });
+      });
     });
   });
 });
