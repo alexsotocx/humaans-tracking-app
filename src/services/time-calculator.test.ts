@@ -1,7 +1,7 @@
 import { Days, TimeEntry } from "../types/models";
 import { Factory } from "rosie";
-import "../../test/factories";
-import { TIME_ENTRY_FACT_NAME } from "../../test/factories";
+import "../../test/factories/models";
+import { TIME_ENTRY_FACT_NAME } from "../../test/factories/models";
 import {
     calculateTime,
     extractDatePortion,
