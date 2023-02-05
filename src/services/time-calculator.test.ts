@@ -1,7 +1,6 @@
-import { Days, TimeEntry } from "../types/models";
-import { Factory } from "rosie";
+import { Days } from "../types/models";
 import "../../test/factories/models";
-import { TIME_ENTRY_FACT_NAME } from "../../test/factories/models";
+import { timeEntryFactory } from "../../test/factories/models";
 import {
     calculateTime,
     extractDatePortion,
@@ -13,8 +12,7 @@ import {
 describe("timeUtils", () => {
     const february2_8AM = new Date("2023-02-02T08:00:00.000Z");
 
-    const timeTracking1 = Factory.build<TimeEntry>(
-        TIME_ENTRY_FACT_NAME,
+    const timeTracking1 = timeEntryFactory.build(
         { startTime: february2_8AM },
         { entryLong: ONE_HOUR_MS * 2 }
     );
@@ -51,14 +49,12 @@ describe("timeUtils", () => {
 
     describe("calculateTime", () => {
         it("sums up the time tracked", () => {
-            const timeTracking1 = Factory.build<TimeEntry>(
-                TIME_ENTRY_FACT_NAME,
+            const timeTracking1 = timeEntryFactory.build(
                 { startTime: february2_8AM },
                 { entryLong: ONE_HOUR_MS * 3 }
             );
 
-            const timeTracking2 = Factory.build<TimeEntry>(
-                TIME_ENTRY_FACT_NAME,
+            const timeTracking2 = timeEntryFactory.build(
                 {
                     startTime: new Date(
                         february2_8AM.getTime() + 3 * ONE_HOUR_MS
@@ -87,8 +83,7 @@ describe("timeUtils", () => {
 
         describe("when the time tracked is greater than the expected working hours", () => {
             it("counts as extra", () => {
-                const timeTracking1 = Factory.build<TimeEntry>(
-                    TIME_ENTRY_FACT_NAME,
+                const timeTracking1 = timeEntryFactory.build(
                     { startTime: february2_8AM },
                     { entryLong: ONE_HOUR_MS * 10.5 }
                 );
