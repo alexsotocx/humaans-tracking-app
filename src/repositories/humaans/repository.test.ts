@@ -1,9 +1,15 @@
 import { ENDPOINT, HumaansHRRepository } from "./repository";
 import * as HumaansFactories from "../../../test/factories/humaans";
-import { convertToProfile, convertToTimeEntry } from "./utils";
+import {
+    convertToProfile,
+    convertToPublicHoliday,
+    convertToTimeEntry,
+} from "./utils";
 import { rest } from "msw";
 import { setupServer } from "msw/node";
 import { Days, Profile } from "../../types/models";
+import { listFactory, timeOffEntry } from "../../../test/factories/humaans";
+import { extractDatePortion } from "../../services/time-calculator";
 beforeAll(() => jest.spyOn(window, "fetch"));
 
 describe("HumaansRepository", () => {
@@ -100,6 +106,39 @@ describe("HumaansRepository", () => {
             const response = await repository.getProfile();
 
             expect(response).toEqual(convertToProfile(profile));
+        });
+    });
+
+    describe("getPublicHolidays", () => {
+        it("finds the public profile of the user", async () => {
+            const listResponse = listFactory.build(
+                { limit: 1, total: 1, skip: 0 },
+                {
+                    factory: HumaansFactories.publicHoliday,
+                }
+            );
+            server.use(
+                rest.get(
+                    `${ENDPOINT}/api/public-holidays`,
+                    (req, res, context) => {
+                        return res(
+                            context.status(200),
+                            context.json(listResponse)
+                        );
+                    }
+                )
+            );
+
+            const date = new Date();
+            const response = await repository.getPublicHolidays({
+                from: extractDatePortion(date),
+                id: "DE-BY",
+                to: extractDatePortion(date),
+            });
+
+            expect(response).toEqual([
+                convertToPublicHoliday(listResponse.data[0] as never),
+            ]);
         });
     });
 });

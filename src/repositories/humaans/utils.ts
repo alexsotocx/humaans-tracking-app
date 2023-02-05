@@ -1,6 +1,6 @@
 import { Humaans } from "./types";
 import TimeTrackingEntry = Humaans.TimeTrackingEntry;
-import { Days, Profile, TimeEntry } from "../../types/models";
+import { Days, Profile, PublicHoliday, TimeEntry } from "../../types/models";
 
 export function createDateFromDateTimeStrings(
     date: string,
@@ -33,5 +33,15 @@ export function convertToProfile(jsonProfile: Humaans.Profile): Profile {
         profilePhoto: url,
         timeZone: jsonProfile.timezone,
         workingDays: [Days.Thursday],
+    };
+}
+
+export function convertToPublicHoliday(
+    jsonPublicHoliday: Humaans.PublicHoliday
+): PublicHoliday {
+    return {
+        date: jsonPublicHoliday.date,
+        name: jsonPublicHoliday.name,
+        id: jsonPublicHoliday.id,
     };
 }

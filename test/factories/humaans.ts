@@ -57,3 +57,19 @@ export const profile = Factory.define<Humaans.Profile>("humaans.profile")
     .attr("lastName", "lastName")
     .attr("timezone", "Europe/Berlin")
     .attr("workingDays", [{ day: Days.Thursday }]);
+
+export const timeOffEntry = Factory.define<Humaans.TimeOffEntry>(
+    "humaans.timeOffEntry"
+)
+    .attr("id", randomUUID)
+    .attr("startDate", extractDatePortion(new Date()))
+    .attr("startPeriod", "full")
+    .attr("endDate", extractDatePortion(new Date()))
+    .attr("endPeriod", "full");
+
+export const publicHoliday = Factory.define<Humaans.PublicHoliday>(
+    "humaans.publicHoliday"
+)
+    .attr("id", randomUUID)
+    .attr("date", extractDatePortion(new Date()))
+    .attr("name", "full");

@@ -19,6 +19,10 @@ export interface IProfileRepository {
 }
 
 export interface INotWorkingDaysRepository {
-    getPublicHolidays(): Promise<PublicHoliday[]>;
+    getPublicHolidays(params: {
+        id: string;
+        from: string;
+        to: string;
+    }): Promise<PublicHoliday[]>;
     getTimeOff(): Promise<TimeOffEntry[]>;
 }

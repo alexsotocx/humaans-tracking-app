@@ -18,9 +18,11 @@ export type TimeEntry = {
 export type PublicHoliday = {
     date: string;
     name: string;
+    id: string;
 };
 
 export type TimeOffEntry = {
+    id: string;
     startDate: string;
     endDate: string;
     startDatePeriod: "full" | "pm" | "am";
