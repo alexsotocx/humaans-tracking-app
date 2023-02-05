@@ -1,10 +1,10 @@
 import { Factory } from "rosie";
-import { TimeEntry } from "../src/types/models";
-import { ONE_HOUR_MS } from "../src/services/time-calculator";
+import { TimeEntry } from "../../src/types/models";
+import { ONE_HOUR_MS } from "../../src/services/time-calculator";
 
 export const TIME_ENTRY_FACT_NAME = "timeEntry";
 
-Factory.define<TimeEntry>(TIME_ENTRY_FACT_NAME)
+export const timeEntryFactory = Factory.define<TimeEntry>(TIME_ENTRY_FACT_NAME)
     .sequence("id")
     .option("entryLong", 0)
     .option("finished", true)
