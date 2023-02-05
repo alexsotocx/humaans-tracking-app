@@ -1,5 +1,3 @@
-import { s } from "msw/lib/glossary-de6278a9";
-
 export namespace Humaans {
     export type TimeTrackingEntry = {
         id: string;
