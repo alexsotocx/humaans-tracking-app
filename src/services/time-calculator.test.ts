@@ -8,6 +8,7 @@ import {
     ONE_DAY_MS,
     ONE_HOUR_MS,
 } from "./time-calculator";
+import { randomUUID } from "crypto";
 
 describe("timeUtils", () => {
     const february2_8AM = new Date("2023-02-02T08:00:00.000Z");
@@ -180,6 +181,7 @@ describe("timeUtils", () => {
                             {
                                 date: extractDatePortion(february2_8AM),
                                 name: "Test Holiday",
+                                id: randomUUID(),
                             },
                         ],
                         startingDate: extractDatePortion(february2_8AM),
@@ -216,6 +218,7 @@ describe("timeUtils", () => {
                         {
                             date: extractDatePortion(february2_8AM),
                             name: "Test Holiday",
+                            id: randomUUID(),
                         },
                     ],
                     startingDate: extractDatePortion(february2_8AM),
@@ -249,6 +252,8 @@ describe("timeUtils", () => {
                                 endDatePeriod: "full",
                                 startDate: extractDatePortion(february2_8AM),
                                 startDatePeriod: "full",
+                                publicHolidaysCalendarID: randomUUID(),
+                                id: randomUUID(),
                             },
                         ],
                         publicHolidays: [],
@@ -287,6 +292,8 @@ describe("timeUtils", () => {
                             endDatePeriod: "full",
                             startDate: extractDatePortion(february2_8AM),
                             startDatePeriod: "full",
+                            id: randomUUID(),
+                            publicHolidaysCalendarID: randomUUID(),
                         },
                     ],
                     publicHolidays: [],

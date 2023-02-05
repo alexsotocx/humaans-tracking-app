@@ -5,17 +5,18 @@ export const ONE_DAY_MS = ONE_HOUR_MS * 24;
 
 export type WorkingHoursPerDay = Record<string, number | undefined>;
 export type ReadableWorkingTime = { hours: number; minutes: number };
-export type CalculatedTimeResponsePerDay = {
+export type CalculatedTimeResponse = {
     expected: ReadableWorkingTime;
     totalWorked: ReadableWorkingTime;
     missing: ReadableWorkingTime;
     extra: ReadableWorkingTime;
 };
 
-export type CalculatedTimeResponse = {
-    workedTimePerDay: Record<string, CalculatedTimeResponsePerDay>;
+export type CalculatedTime = {
+    workedTimePerDay: Record<string, CalculatedTimeResponse>;
     minimumEntryDate: string;
     maximumEntryDate: string;
+    total: CalculatedTimeResponse;
 };
 
 export function convertToReadableTime(ms: number): ReadableWorkingTime {
@@ -46,16 +47,18 @@ function mapDateToDay(date: string): Days {
     return days[dateIndex];
 }
 
-function calculateDifference(
+function createTotalTime(
     expected: number,
     worked: number
-): Pick<CalculatedTimeResponsePerDay, "extra" | "missing"> {
+): CalculatedTimeResponse {
     const difference = expected - worked;
     const empty = { hours: 0, minutes: 0 };
 
     return {
         missing: difference > 0 ? convertToReadableTime(difference) : empty,
         extra: difference < 0 ? convertToReadableTime(difference * -1) : empty,
+        expected: convertToReadableTime(expected),
+        totalWorked: convertToReadableTime(worked),
     };
 }
 
@@ -133,7 +136,7 @@ export function calculateTime(param: {
     holidays: TimeOffEntry[];
     workingHoursPerDay: WorkingHoursPerDay;
     timeEntries: TimeEntry[];
-}) {
+}): CalculatedTime {
     const timeEntriesPerDay = groupTimeEntriesPerDay(param.timeEntries);
 
     const workedTimePerDay: Record<
@@ -163,19 +166,23 @@ export function calculateTime(param: {
         };
     });
 
+    let totalWorked = 0;
+    let totalExpected = 0;
+    Object.entries(workedTimePerDay).forEach(([day, { expected, total }]) => {
+        totalExpected += expected;
+        totalWorked += total;
+    });
+
     return {
         workedTimePerDay: Object.entries(workedTimePerDay).reduce(
             (res, [day, { expected, total }]) => {
-                res[day] = {
-                    expected: convertToReadableTime(expected),
-                    totalWorked: convertToReadableTime(total),
-                    ...calculateDifference(expected, total),
-                };
+                res[day] = createTotalTime(expected, total);
                 return res;
             },
-            {} as Record<string, CalculatedTimeResponsePerDay>
+            {} as Record<string, CalculatedTimeResponse>
         ),
         minimumEntryDate: param.startingDate,
         maximumEntryDate: param.endDate,
+        total: createTotalTime(totalExpected, totalWorked),
     };
 }
