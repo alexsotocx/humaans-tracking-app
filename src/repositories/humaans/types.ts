@@ -45,7 +45,7 @@ export namespace Humaans {
         id: string;
         startDate: string;
         endDate: string;
-        startPeriod: string;
-        endPeriod: string;
+        startPeriod: "full" | "pm";
+        endPeriod: "full" | "am";
     };
 }

@@ -16,7 +16,9 @@ import {
     convertToProfile,
     convertToPublicHoliday,
     convertToTimeEntry,
+    convertToTimeOffEntry,
 } from "./utils";
+import { f } from "msw/lib/glossary-de6278a9";
 
 export const ENDPOINT = "https://app.humaans.io";
 
@@ -77,9 +79,9 @@ export class HumaansHRRepository
 
     async findEntries(filters: TimeTrackingFilters): Promise<TimeEntry[]> {
         const url = new URL("/api/timesheet-entries", ENDPOINT);
-        if (filters.from) url.searchParams.append("date[$gte]", filters.from);
-        if (filters.before)
-            url.searchParams.append("date[$lte]", filters.before);
+        if (filters.userId) url.searchParams.set("personId", filters.userId);
+        if (filters.from) url.searchParams.set("date[$gte]", filters.from);
+        if (filters.before) url.searchParams.set("date[$lte]", filters.before);
 
         try {
             const data =
@@ -93,7 +95,7 @@ export class HumaansHRRepository
         }
     }
 
-    async getProfile(): Promise<Profile> {
+    async getCurrentUserProfile(): Promise<Profile> {
         try {
             const response = await this.fetchApi(`${ENDPOINT}/api/me`, {
                 headers: this.generateHeaders(),
@@ -121,7 +123,6 @@ export class HumaansHRRepository
         from: string;
         to: string;
     }): Promise<PublicHoliday[]> {
-        //https://app.humaans.io/api/public-holidays?publicHolidayCalendarId=DE-BY&date[$gte]=2023-01-01&date[$lte]=2023-12-31
         const url = new URL("/api/public-holidays", ENDPOINT);
         url.searchParams.set("publicHolidayCalendarId", params.id);
         url.searchParams.set("date[$gte]", params.from);
@@ -137,7 +138,18 @@ export class HumaansHRRepository
         }
     }
 
-    getTimeOff(): Promise<TimeOffEntry[]> {
-        return Promise.resolve([]);
+    async getTimeOff(params: { userId: string }): Promise<TimeOffEntry[]> {
+        const url = new URL("/api/time-away", ENDPOINT);
+        url.searchParams.set("personId", params.userId);
+
+        try {
+            const data = await this.loopThroughPagination<Humaans.TimeOffEntry>(
+                url
+            );
+            return data.map(convertToTimeOffEntry);
+        } catch (e) {
+            console.error(e);
+            throw e;
+        }
     }
 }

@@ -1,6 +1,12 @@
 import { Humaans } from "./types";
 import TimeTrackingEntry = Humaans.TimeTrackingEntry;
-import { Days, Profile, PublicHoliday, TimeEntry } from "../../types/models";
+import {
+    Days,
+    Profile,
+    PublicHoliday,
+    TimeEntry,
+    TimeOffEntry,
+} from "../../types/models";
 
 export function createDateFromDateTimeStrings(
     date: string,
@@ -43,5 +49,17 @@ export function convertToPublicHoliday(
         date: jsonPublicHoliday.date,
         name: jsonPublicHoliday.name,
         id: jsonPublicHoliday.id,
+    };
+}
+
+export function convertToTimeOffEntry(
+    jsonTimeOff: Humaans.TimeOffEntry
+): TimeOffEntry {
+    return {
+        id: jsonTimeOff.id,
+        endDate: jsonTimeOff.endDate,
+        startDatePeriod: jsonTimeOff.startPeriod,
+        startDate: jsonTimeOff.startDate,
+        endDatePeriod: jsonTimeOff.endPeriod,
     };
 }

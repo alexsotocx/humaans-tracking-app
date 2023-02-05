@@ -8,6 +8,7 @@ import {
 export type TimeTrackingFilters = {
     from?: string;
     before?: string;
+    userId?: string;
 };
 
 export interface ITimeTrackingRepository {
@@ -15,7 +16,7 @@ export interface ITimeTrackingRepository {
 }
 
 export interface IProfileRepository {
-    getProfile(): Promise<Profile>;
+    getCurrentUserProfile(): Promise<Profile>;
 }
 
 export interface INotWorkingDaysRepository {
@@ -24,5 +25,5 @@ export interface INotWorkingDaysRepository {
         from: string;
         to: string;
     }): Promise<PublicHoliday[]>;
-    getTimeOff(): Promise<TimeOffEntry[]>;
+    getTimeOff(params: { userId: string }): Promise<TimeOffEntry[]>;
 }
