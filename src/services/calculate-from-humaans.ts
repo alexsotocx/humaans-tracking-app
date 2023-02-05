@@ -1,4 +1,4 @@
-import { CalculatedTimeResponse, calculateTime } from "./time-calculator";
+import { CalculatedTime, calculateTime } from "./time-calculator";
 import { HumaansHRRepository } from "../repositories/humaans/repository";
 
 export async function calculateFromHumaans(params: {
@@ -7,7 +7,7 @@ export async function calculateFromHumaans(params: {
     workingHoursPerDay: Record<string, number>;
     token: string;
     humaansRepoFactory: (token: string) => HumaansHRRepository;
-}): Promise<CalculatedTimeResponse> {
+}): Promise<CalculatedTime> {
     const repository = params.humaansRepoFactory(params.token);
     const currentUser = await repository.getCurrentUserProfile();
     const timeEntries = await repository.findEntries({
