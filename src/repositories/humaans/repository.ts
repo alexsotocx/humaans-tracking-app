@@ -1,32 +1,32 @@
 import {
-  INotWorkingDaysRepository,
-  IProfileRepository,
-  ITimeTrackingRepository,
-  TimeTrackingFilters,
+    INotWorkingDaysRepository,
+    IProfileRepository,
+    ITimeTrackingRepository,
+    TimeTrackingFilters,
 } from "../../interfaces/repositories";
 import { Profile, PublicHoliday, TimeOffEntry } from "../../types/models";
 
 export class HumaansHRRepository
-  implements
-    ITimeTrackingRepository,
-    IProfileRepository,
-    INotWorkingDaysRepository
+    implements
+        ITimeTrackingRepository,
+        IProfileRepository,
+        INotWorkingDaysRepository
 {
-  constructor(private readonly fetchApi: typeof fetch) {}
+    constructor(private readonly fetchApi: typeof fetch) {}
 
-  findEntries(filters: TimeTrackingFilters): Promise<TimeEntry[]> {
-    return Promise.resolve([]);
-  }
+    findEntries(filters: TimeTrackingFilters): Promise<TimeEntry[]> {
+        return Promise.resolve([]);
+    }
 
-  getProfile(): Promise<Profile> {
-    return Promise.resolve(undefined);
-  }
+    getProfile(): Promise<Profile> {
+        return Promise.resolve(undefined);
+    }
 
-  getPublicHolidays(): Promise<PublicHoliday[]> {
-    return Promise.resolve([]);
-  }
+    getPublicHolidays(): Promise<PublicHoliday[]> {
+        return Promise.resolve([]);
+    }
 
-  getTimeOff(): Promise<TimeOffEntry[]> {
-    return Promise.resolve([]);
-  }
+    getTimeOff(): Promise<TimeOffEntry[]> {
+        return Promise.resolve([]);
+    }
 }
