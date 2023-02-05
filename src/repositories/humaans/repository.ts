@@ -5,13 +5,14 @@ import {
     TimeTrackingFilters,
 } from "../../interfaces/repositories";
 import {
+    Days,
     Profile,
     PublicHoliday,
     TimeEntry,
     TimeOffEntry,
 } from "../../types/models";
 import { Humaans } from "./types";
-import { convertToTimeEntry } from "./utils";
+import { convertToProfile, convertToTimeEntry } from "./utils";
 
 export const ENDPOINT = "https://app.humaans.io";
 
@@ -79,8 +80,27 @@ export class HumaansHRRepository
         }
     }
 
-    getProfile(): Promise<Profile> {
-        return Promise.resolve(undefined);
+    async getProfile(): Promise<Profile> {
+        try {
+            const response = await this.fetchApi(`${ENDPOINT}/api/me`, {
+                headers: this.generateHeaders(),
+            });
+
+            if (!response.ok) {
+                throw new Error(
+                    `Error on requesting profile ${response.url.toString()}, ${
+                        response.status
+                    }, ${await response.text()}`
+                );
+            }
+
+            const jsonProfile: Humaans.Profile = await response.json();
+
+            return convertToProfile(jsonProfile);
+        } catch (e) {
+            console.error(e);
+            throw e;
+        }
     }
 
     getPublicHolidays(): Promise<PublicHoliday[]> {

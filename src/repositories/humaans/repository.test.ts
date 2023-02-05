@@ -1,8 +1,9 @@
 import { ENDPOINT, HumaansHRRepository } from "./repository";
 import * as HumaansFactories from "../../../test/factories/humaans";
-import { convertToTimeEntry } from "./utils";
+import { convertToProfile, convertToTimeEntry } from "./utils";
 import { rest } from "msw";
 import { setupServer } from "msw/node";
+import { Days, Profile } from "../../types/models";
 beforeAll(() => jest.spyOn(window, "fetch"));
 
 describe("HumaansRepository", () => {
@@ -81,6 +82,24 @@ describe("HumaansRepository", () => {
                 expect(searchParams!.get("date[$gte]")).toEqual("2023-01-01");
                 expect(searchParams!.get("date[$lte]")).toEqual("2023-01-01");
             });
+        });
+    });
+
+    describe("getProfile", () => {
+        const profile = HumaansFactories.profile.build({
+            workingDays: [{ day: Days.Thursday }],
+        });
+
+        it("finds the public profile of the user", async () => {
+            server.use(
+                rest.get(`${ENDPOINT}/api/me`, (req, res, context) => {
+                    return res(context.status(200), context.json(profile));
+                })
+            );
+
+            const response = await repository.getProfile();
+
+            expect(response).toEqual(convertToProfile(profile));
         });
     });
 });

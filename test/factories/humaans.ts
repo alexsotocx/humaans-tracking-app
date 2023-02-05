@@ -6,6 +6,7 @@ import {
     extractDatePortion,
 } from "../../src/services/time-calculator";
 import { createDateFromDateTimeStrings } from "../../src/repositories/humaans/utils";
+import { Days } from "../../src/types/models";
 
 export const timeEntry = Factory.define<Humaans.TimeTrackingEntry>(
     "humaans.timeEntry"
@@ -45,3 +46,14 @@ export const listFactory = Factory.define<Humaans.ListResponse<unknown>>(
             return data;
         }
     );
+
+export const profile = Factory.define<Humaans.Profile>("humaans.profile")
+    .attr("profilePhotoId", randomUUID)
+    .attr("profilePhoto", ["profilePhotoId"], (profilePhotoId) => ({
+        id: profilePhotoId,
+        variants: { "64": `https://url.com?url=${randomUUID()}` },
+    }))
+    .attr("firstName", "firstName")
+    .attr("lastName", "lastName")
+    .attr("timezone", "Europe/Berlin")
+    .attr("workingDays", [{ day: Days.Thursday }]);
