@@ -12,11 +12,10 @@ import { setupServer } from "msw/node";
 import { Days } from "../../types/models";
 import { extractDatePortion } from "../../services/time-calculator";
 import { randomUUID } from "crypto";
-
-beforeAll(() => jest.spyOn(window, "fetch"));
+import axios from "axios";
 
 describe("HumaansRepository", () => {
-    const repository = new HumaansHRRepository(fetch, "token");
+    const repository = new HumaansHRRepository(axios, "token");
     const server = setupServer();
     beforeAll(() => server.listen({}));
     beforeEach(() => server.resetHandlers());

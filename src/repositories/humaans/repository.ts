@@ -17,6 +17,7 @@ import {
     convertToTimeEntry,
     convertToTimeOffEntry,
 } from "./utils";
+import { AxiosInstance } from "axios";
 
 export const ENDPOINT = "https://app.humaans.io";
 
@@ -27,16 +28,16 @@ export class HumaansHRRepository
         INotWorkingDaysRepository
 {
     constructor(
-        private readonly fetchApi: typeof fetch,
+        private readonly axios: AxiosInstance,
         private readonly token: string
     ) {}
 
     private generateHeaders(): {
-        Authentication: string;
+        Authorization: string;
         "Content-Type": string;
     } {
         return {
-            Authentication: `Bearer ${this.token}`,
+            Authorization: `Bearer ${this.token}`,
             "Content-Type": "application/json",
         };
     }
@@ -51,19 +52,22 @@ export class HumaansHRRepository
 
             do {
                 url.searchParams.set("$skip", (page * perPage).toString());
-                const response = await this.fetchApi(url, {
-                    headers: this.generateHeaders(),
-                });
+                const response = await this.axios.get<Humaans.ListResponse<T>>(
+                    url.toString(),
+                    {
+                        headers: this.generateHeaders(),
+                    }
+                );
 
-                if (!response.ok) {
+                if (response.status !== 200) {
                     throw new Error(
                         `Error on requesting time entries ${url.toString()}, ${
                             response.status
-                        }, ${await response.text()}`
+                        }, ${response.data}`
                     );
                 }
 
-                const json: Humaans.ListResponse<T> = await response.json();
+                const json = response.data;
 
                 totalElements = json.total;
                 elements.push(...json.data);
@@ -95,19 +99,22 @@ export class HumaansHRRepository
 
     async getCurrentUserProfile(): Promise<Profile> {
         try {
-            const response = await this.fetchApi(`${ENDPOINT}/api/me`, {
-                headers: this.generateHeaders(),
-            });
+            const response = await this.axios.get<Humaans.Profile>(
+                `${ENDPOINT}/api/me`,
+                {
+                    headers: this.generateHeaders(),
+                }
+            );
 
-            if (!response.ok) {
+            if (response.status !== 200) {
                 throw new Error(
-                    `Error on requesting profile ${response.url.toString()}, ${
+                    `Error on requesting profile ${response.request.url.toString()}, ${
                         response.status
-                    }, ${await response.text()}`
+                    }, ${response.data}`
                 );
             }
 
-            const jsonProfile: Humaans.Profile = await response.json();
+            const jsonProfile = response.data;
 
             return convertToProfile(jsonProfile);
         } catch (e) {
