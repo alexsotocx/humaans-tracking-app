@@ -28,7 +28,7 @@ export function convertToTimeEntry(entry: TimeTrackingEntry): TimeEntry {
 
 export function convertToProfile(jsonProfile: Humaans.Profile): Profile {
     const [, url] = Object.entries(
-        jsonProfile.profilePhoto.variants
+        jsonProfile.profilePhoto?.variants
     ).reduceRight((biggerEntry, entry) => {
         if (Number(biggerEntry[0]) > Number(entry[0])) return biggerEntry;
         return entry;
