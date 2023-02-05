@@ -48,11 +48,14 @@ export const listFactory = Factory.define<Humaans.ListResponse<unknown>>(
     );
 
 export const profile = Factory.define<Humaans.Profile>("humaans.profile")
+    .attr("id", randomUUID)
     .attr("profilePhotoId", randomUUID)
     .attr("profilePhoto", ["profilePhotoId"], (profilePhotoId) => ({
         id: profilePhotoId,
         variants: { "64": `https://url.com?url=${randomUUID()}` },
     }))
+    .attr("remoteRegionCode", randomUUID)
+    .attr("remoteCountryCode", randomUUID)
     .attr("firstName", "firstName")
     .attr("lastName", "lastName")
     .attr("timezone", "Europe/Berlin")
@@ -62,6 +65,7 @@ export const timeOffEntry = Factory.define<Humaans.TimeOffEntry>(
     "humaans.timeOffEntry"
 )
     .attr("id", randomUUID)
+    .attr("publicHolidayCalendarId", randomUUID)
     .attr("startDate", extractDatePortion(new Date()))
     .attr("startPeriod", "full")
     .attr("endDate", extractDatePortion(new Date()))

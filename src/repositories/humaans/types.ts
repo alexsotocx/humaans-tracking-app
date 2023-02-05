@@ -23,6 +23,7 @@ export namespace Humaans {
     };
 
     export type Profile = {
+        id: string;
         firstName: string;
         lastName: string;
         profilePhotoId: string;
@@ -32,6 +33,8 @@ export namespace Humaans {
         };
         workingDays: { day: string }[];
         timezone: string;
+        remoteRegionCode: string;
+        remoteCountryCode: string;
         // Rest of the fields ignored https://docs.humaans.io/api/#me
     };
 
@@ -47,5 +50,6 @@ export namespace Humaans {
         endDate: string;
         startPeriod: "full" | "pm";
         endPeriod: "full" | "am";
+        publicHolidayCalendarId: string;
     };
 }

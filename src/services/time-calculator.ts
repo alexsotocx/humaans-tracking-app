@@ -12,6 +12,12 @@ export type CalculatedTimeResponsePerDay = {
     extra: ReadableWorkingTime;
 };
 
+export type CalculatedTimeResponse = {
+    workedTimePerDay: Record<string, CalculatedTimeResponsePerDay>;
+    minimumEntryDate: string;
+    maximumEntryDate: string;
+};
+
 export function convertToReadableTime(ms: number): ReadableWorkingTime {
     const minutes = Math.floor(ms / (60 * 1000));
     const exactHours = Math.floor(minutes / 60);

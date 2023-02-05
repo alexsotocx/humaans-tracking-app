@@ -39,6 +39,9 @@ export function convertToProfile(jsonProfile: Humaans.Profile): Profile {
         profilePhoto: url,
         timeZone: jsonProfile.timezone,
         workingDays: [Days.Thursday],
+        id: jsonProfile.id,
+        country: jsonProfile.remoteCountryCode,
+        region: jsonProfile.remoteRegionCode,
     };
 }
 
@@ -61,5 +64,6 @@ export function convertToTimeOffEntry(
         startDatePeriod: jsonTimeOff.startPeriod,
         startDate: jsonTimeOff.startDate,
         endDatePeriod: jsonTimeOff.endPeriod,
+        publicHolidaysCalendarID: jsonTimeOff.publicHolidayCalendarId,
     };
 }

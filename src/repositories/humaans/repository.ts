@@ -5,7 +5,6 @@ import {
     TimeTrackingFilters,
 } from "../../interfaces/repositories";
 import {
-    Days,
     Profile,
     PublicHoliday,
     TimeEntry,
@@ -18,7 +17,6 @@ import {
     convertToTimeEntry,
     convertToTimeOffEntry,
 } from "./utils";
-import { f } from "msw/lib/glossary-de6278a9";
 
 export const ENDPOINT = "https://app.humaans.io";
 
@@ -81,7 +79,7 @@ export class HumaansHRRepository
         const url = new URL("/api/timesheet-entries", ENDPOINT);
         if (filters.userId) url.searchParams.set("personId", filters.userId);
         if (filters.from) url.searchParams.set("date[$gte]", filters.from);
-        if (filters.before) url.searchParams.set("date[$lte]", filters.before);
+        if (filters.to) url.searchParams.set("date[$lte]", filters.to);
 
         try {
             const data =

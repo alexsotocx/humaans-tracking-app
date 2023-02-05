@@ -27,12 +27,16 @@ export type TimeOffEntry = {
     endDate: string;
     startDatePeriod: "full" | "pm" | "am";
     endDatePeriod: "full" | "pm" | "am";
+    publicHolidaysCalendarID: string;
 };
 
 export type Profile = {
+    id: string;
     firstName: string;
     lastName: string;
     profilePhoto: string | null;
     workingDays: Days[];
     timeZone: string;
+    region: string;
+    country: string;
 };

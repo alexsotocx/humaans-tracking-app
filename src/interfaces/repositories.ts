@@ -7,7 +7,7 @@ import {
 
 export type TimeTrackingFilters = {
     from?: string;
-    before?: string;
+    to?: string;
     userId?: string;
 };
 

@@ -1,5 +1,6 @@
 import { ENDPOINT, HumaansHRRepository } from "./repository";
 import * as HumaansFactories from "../../../test/factories/humaans";
+import { listFactory } from "../../../test/factories/humaans";
 import {
     convertToProfile,
     convertToPublicHoliday,
@@ -8,10 +9,10 @@ import {
 } from "./utils";
 import { rest } from "msw";
 import { setupServer } from "msw/node";
-import { Days, Profile } from "../../types/models";
-import { listFactory, timeOffEntry } from "../../../test/factories/humaans";
+import { Days } from "../../types/models";
 import { extractDatePortion } from "../../services/time-calculator";
 import { randomUUID } from "crypto";
+
 beforeAll(() => jest.spyOn(window, "fetch"));
 
 describe("HumaansRepository", () => {
@@ -84,7 +85,7 @@ describe("HumaansRepository", () => {
 
                 await repository.findEntries({
                     from: "2023-01-01",
-                    before: "2023-01-01",
+                    to: "2023-01-01",
                 });
 
                 expect(searchParams!.get("date[$gte]")).toEqual("2023-01-01");
