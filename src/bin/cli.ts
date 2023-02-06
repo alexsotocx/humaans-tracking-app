@@ -1,27 +1,28 @@
 import { calculateFromHumaans } from "../services/calculate-from-humaans";
 import { Days } from "../types/models";
 import axios from "axios";
-import express from "express";
 import { HumaansHRRepository } from "../repositories/humaans/repository";
-import { createProxyMiddleware } from "http-proxy-middleware";
+import fs from "fs/promises";
 
 async function boostrap(): Promise<void> {
     const token = process.env["TOKEN"];
-    const app = express();
-    app.use(
-        "/api/humaans/*",
-        (req, res, next) => {
-            console.log(req.headers, req.path);
-            next();
-        },
-        createProxyMiddleware({
-            target: "https://app.humaans.io/api",
-            changeOrigin: true,
-            logLevel: "info",
-        })
-    );
+    const from = process.env["FROM"];
+    const to = process.env["TO"];
+    // const app = express();
+    // app.use(
+    //     "/api/humaans/*",
+    //     (req, res, next) => {
+    //         console.log(req.headers, req.path);
+    //         next();
+    //     },
+    //     createProxyMiddleware({
+    //         target: "https://app.humaans.io/api",
+    //         changeOrigin: true,
+    //         logLevel: "info",
+    //     })
+    // );
 
-    app.listen(3000);
+    // app.listen(3000);
 
     const workingDays: Record<string, number> = {
         [Days.Monday]: 8,
@@ -35,11 +36,11 @@ async function boostrap(): Promise<void> {
         humaansRepoFactory: (token) =>
             new HumaansHRRepository(axios.create(), token),
         token: token!,
-        from: "2023-01-01",
-        to: "2023-01-31",
+        from: from!,
+        to: to!,
     });
 
-    console.log(JSON.stringify(results));
+    await fs.writeFile("res.json", JSON.stringify(results, null, 2));
 }
 
-boostrap();
+void boostrap();
