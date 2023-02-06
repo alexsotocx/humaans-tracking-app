@@ -90,7 +90,9 @@ export class HumaansHRRepository
                 await this.loopThroughPagination<Humaans.TimeTrackingEntry>(
                     url
                 );
-            return data.map(convertToTimeEntry);
+            return data
+                .filter((d) => d.endTime !== null)
+                .map(convertToTimeEntry);
         } catch (e) {
             console.error(e);
             throw e;

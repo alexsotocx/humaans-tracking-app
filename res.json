@@ -1,0 +1,582 @@
+{
+  "workedTimePerDay": {
+    "2023-01-01": {
+      "missing": {
+        "hours": 0,
+        "minutes": 0
+      },
+      "extra": {
+        "hours": 0,
+        "minutes": 0
+      },
+      "expected": {
+        "hours": 0,
+        "minutes": 0
+      },
+      "totalWorked": {
+        "hours": 0,
+        "minutes": 0
+      }
+    },
+    "2023-01-02": {
+      "missing": {
+        "hours": 0,
+        "minutes": 12
+      },
+      "extra": {
+        "hours": 0,
+        "minutes": 0
+      },
+      "expected": {
+        "hours": 8,
+        "minutes": 0
+      },
+      "totalWorked": {
+        "hours": 7,
+        "minutes": 48
+      }
+    },
+    "2023-01-03": {
+      "missing": {
+        "hours": 0,
+        "minutes": 0
+      },
+      "extra": {
+        "hours": 0,
+        "minutes": 26
+      },
+      "expected": {
+        "hours": 8,
+        "minutes": 0
+      },
+      "totalWorked": {
+        "hours": 8,
+        "minutes": 26
+      }
+    },
+    "2023-01-04": {
+      "missing": {
+        "hours": 0,
+        "minutes": 19
+      },
+      "extra": {
+        "hours": 0,
+        "minutes": 0
+      },
+      "expected": {
+        "hours": 8,
+        "minutes": 0
+      },
+      "totalWorked": {
+        "hours": 7,
+        "minutes": 41
+      }
+    },
+    "2023-01-05": {
+      "missing": {
+        "hours": 0,
+        "minutes": 7
+      },
+      "extra": {
+        "hours": 0,
+        "minutes": 0
+      },
+      "expected": {
+        "hours": 8,
+        "minutes": 0
+      },
+      "totalWorked": {
+        "hours": 7,
+        "minutes": 53
+      }
+    },
+    "2023-01-06": {
+      "missing": {
+        "hours": 0,
+        "minutes": 0
+      },
+      "extra": {
+        "hours": 0,
+        "minutes": 0
+      },
+      "expected": {
+        "hours": 0,
+        "minutes": 0
+      },
+      "totalWorked": {
+        "hours": 0,
+        "minutes": 0
+      }
+    },
+    "2023-01-07": {
+      "missing": {
+        "hours": 0,
+        "minutes": 0
+      },
+      "extra": {
+        "hours": 0,
+        "minutes": 0
+      },
+      "expected": {
+        "hours": 0,
+        "minutes": 0
+      },
+      "totalWorked": {
+        "hours": 0,
+        "minutes": 0
+      }
+    },
+    "2023-01-08": {
+      "missing": {
+        "hours": 0,
+        "minutes": 0
+      },
+      "extra": {
+        "hours": 0,
+        "minutes": 0
+      },
+      "expected": {
+        "hours": 0,
+        "minutes": 0
+      },
+      "totalWorked": {
+        "hours": 0,
+        "minutes": 0
+      }
+    },
+    "2023-01-09": {
+      "missing": {
+        "hours": 0,
+        "minutes": 0
+      },
+      "extra": {
+        "hours": 0,
+        "minutes": 0
+      },
+      "expected": {
+        "hours": 0,
+        "minutes": 0
+      },
+      "totalWorked": {
+        "hours": 0,
+        "minutes": 0
+      }
+    },
+    "2023-01-10": {
+      "missing": {
+        "hours": 0,
+        "minutes": 0
+      },
+      "extra": {
+        "hours": 0,
+        "minutes": 0
+      },
+      "expected": {
+        "hours": 0,
+        "minutes": 0
+      },
+      "totalWorked": {
+        "hours": 0,
+        "minutes": 0
+      }
+    },
+    "2023-01-11": {
+      "missing": {
+        "hours": 0,
+        "minutes": 0
+      },
+      "extra": {
+        "hours": 1,
+        "minutes": 54
+      },
+      "expected": {
+        "hours": 8,
+        "minutes": 0
+      },
+      "totalWorked": {
+        "hours": 9,
+        "minutes": 54
+      }
+    },
+    "2023-01-12": {
+      "missing": {
+        "hours": 0,
+        "minutes": 0
+      },
+      "extra": {
+        "hours": 1,
+        "minutes": 49
+      },
+      "expected": {
+        "hours": 8,
+        "minutes": 0
+      },
+      "totalWorked": {
+        "hours": 9,
+        "minutes": 49
+      }
+    },
+    "2023-01-13": {
+      "missing": {
+        "hours": 1,
+        "minutes": 3
+      },
+      "extra": {
+        "hours": 0,
+        "minutes": 0
+      },
+      "expected": {
+        "hours": 8,
+        "minutes": 0
+      },
+      "totalWorked": {
+        "hours": 6,
+        "minutes": 57
+      }
+    },
+    "2023-01-14": {
+      "missing": {
+        "hours": 0,
+        "minutes": 0
+      },
+      "extra": {
+        "hours": 0,
+        "minutes": 0
+      },
+      "expected": {
+        "hours": 0,
+        "minutes": 0
+      },
+      "totalWorked": {
+        "hours": 0,
+        "minutes": 0
+      }
+    },
+    "2023-01-15": {
+      "missing": {
+        "hours": 0,
+        "minutes": 0
+      },
+      "extra": {
+        "hours": 0,
+        "minutes": 0
+      },
+      "expected": {
+        "hours": 0,
+        "minutes": 0
+      },
+      "totalWorked": {
+        "hours": 0,
+        "minutes": 0
+      }
+    },
+    "2023-01-16": {
+      "missing": {
+        "hours": 0,
+        "minutes": 33
+      },
+      "extra": {
+        "hours": 0,
+        "minutes": 0
+      },
+      "expected": {
+        "hours": 8,
+        "minutes": 0
+      },
+      "totalWorked": {
+        "hours": 7,
+        "minutes": 27
+      }
+    },
+    "2023-01-17": {
+      "missing": {
+        "hours": 0,
+        "minutes": 25
+      },
+      "extra": {
+        "hours": 0,
+        "minutes": 0
+      },
+      "expected": {
+        "hours": 8,
+        "minutes": 0
+      },
+      "totalWorked": {
+        "hours": 7,
+        "minutes": 35
+      }
+    },
+    "2023-01-18": {
+      "missing": {
+        "hours": 0,
+        "minutes": 0
+      },
+      "extra": {
+        "hours": 2,
+        "minutes": 3
+      },
+      "expected": {
+        "hours": 8,
+        "minutes": 0
+      },
+      "totalWorked": {
+        "hours": 10,
+        "minutes": 3
+      }
+    },
+    "2023-01-19": {
+      "missing": {
+        "hours": 0,
+        "minutes": 22
+      },
+      "extra": {
+        "hours": 0,
+        "minutes": 0
+      },
+      "expected": {
+        "hours": 8,
+        "minutes": 0
+      },
+      "totalWorked": {
+        "hours": 7,
+        "minutes": 38
+      }
+    },
+    "2023-01-20": {
+      "missing": {
+        "hours": 0,
+        "minutes": 51
+      },
+      "extra": {
+        "hours": 0,
+        "minutes": 0
+      },
+      "expected": {
+        "hours": 8,
+        "minutes": 0
+      },
+      "totalWorked": {
+        "hours": 7,
+        "minutes": 9
+      }
+    },
+    "2023-01-21": {
+      "missing": {
+        "hours": 0,
+        "minutes": 0
+      },
+      "extra": {
+        "hours": 0,
+        "minutes": 0
+      },
+      "expected": {
+        "hours": 0,
+        "minutes": 0
+      },
+      "totalWorked": {
+        "hours": 0,
+        "minutes": 0
+      }
+    },
+    "2023-01-22": {
+      "missing": {
+        "hours": 0,
+        "minutes": 0
+      },
+      "extra": {
+        "hours": 0,
+        "minutes": 0
+      },
+      "expected": {
+        "hours": 0,
+        "minutes": 0
+      },
+      "totalWorked": {
+        "hours": 0,
+        "minutes": 0
+      }
+    },
+    "2023-01-23": {
+      "missing": {
+        "hours": 0,
+        "minutes": 0
+      },
+      "extra": {
+        "hours": 0,
+        "minutes": 32
+      },
+      "expected": {
+        "hours": 8,
+        "minutes": 0
+      },
+      "totalWorked": {
+        "hours": 8,
+        "minutes": 32
+      }
+    },
+    "2023-01-24": {
+      "missing": {
+        "hours": 0,
+        "minutes": 10
+      },
+      "extra": {
+        "hours": 0,
+        "minutes": 0
+      },
+      "expected": {
+        "hours": 8,
+        "minutes": 0
+      },
+      "totalWorked": {
+        "hours": 7,
+        "minutes": 50
+      }
+    },
+    "2023-01-25": {
+      "missing": {
+        "hours": 0,
+        "minutes": 0
+      },
+      "extra": {
+        "hours": 0,
+        "minutes": 28
+      },
+      "expected": {
+        "hours": 8,
+        "minutes": 0
+      },
+      "totalWorked": {
+        "hours": 8,
+        "minutes": 28
+      }
+    },
+    "2023-01-26": {
+      "missing": {
+        "hours": 0,
+        "minutes": 13
+      },
+      "extra": {
+        "hours": 0,
+        "minutes": 0
+      },
+      "expected": {
+        "hours": 8,
+        "minutes": 0
+      },
+      "totalWorked": {
+        "hours": 7,
+        "minutes": 47
+      }
+    },
+    "2023-01-27": {
+      "missing": {
+        "hours": 0,
+        "minutes": 0
+      },
+      "extra": {
+        "hours": 0,
+        "minutes": 52
+      },
+      "expected": {
+        "hours": 8,
+        "minutes": 0
+      },
+      "totalWorked": {
+        "hours": 8,
+        "minutes": 52
+      }
+    },
+    "2023-01-28": {
+      "missing": {
+        "hours": 0,
+        "minutes": 0
+      },
+      "extra": {
+        "hours": 0,
+        "minutes": 0
+      },
+      "expected": {
+        "hours": 0,
+        "minutes": 0
+      },
+      "totalWorked": {
+        "hours": 0,
+        "minutes": 0
+      }
+    },
+    "2023-01-29": {
+      "missing": {
+        "hours": 0,
+        "minutes": 0
+      },
+      "extra": {
+        "hours": 2,
+        "minutes": 23
+      },
+      "expected": {
+        "hours": 0,
+        "minutes": 0
+      },
+      "totalWorked": {
+        "hours": 2,
+        "minutes": 23
+      }
+    },
+    "2023-01-30": {
+      "missing": {
+        "hours": 0,
+        "minutes": 0
+      },
+      "extra": {
+        "hours": 1,
+        "minutes": 10
+      },
+      "expected": {
+        "hours": 8,
+        "minutes": 0
+      },
+      "totalWorked": {
+        "hours": 9,
+        "minutes": 10
+      }
+    },
+    "2023-01-31": {
+      "missing": {
+        "hours": 0,
+        "minutes": 0
+      },
+      "extra": {
+        "hours": 0,
+        "minutes": 15
+      },
+      "expected": {
+        "hours": 8,
+        "minutes": 0
+      },
+      "totalWorked": {
+        "hours": 8,
+        "minutes": 15
+      }
+    }
+  },
+  "minimumEntryDate": "2023-01-01",
+  "maximumEntryDate": "2023-01-31",
+  "total": {
+    "missing": {
+      "hours": 0,
+      "minutes": 0
+    },
+    "extra": {
+      "hours": 7,
+      "minutes": 37
+    },
+    "expected": {
+      "hours": 152,
+      "minutes": 0
+    },
+    "totalWorked": {
+      "hours": 159,
+      "minutes": 37
+    }
+  }
+}
