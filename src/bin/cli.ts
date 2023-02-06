@@ -41,6 +41,9 @@ async function boostrap(): Promise<void> {
     });
 
     await fs.writeFile("res.json", JSON.stringify(results, null, 2));
+
+    console.log("Result of your query for", from, to);
+    console.log(JSON.stringify(results.total));
 }
 
 void boostrap();
