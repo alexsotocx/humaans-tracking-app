@@ -1,4 +1,4 @@
-import { ENDPOINT, HumaansHRRepository } from "./repository";
+import { HumaansHRRepository } from "./repository";
 import * as HumaansFactories from "../../../test/factories/humaans";
 import { listFactory } from "../../../test/factories/humaans";
 import {
@@ -14,8 +14,10 @@ import { extractDatePortion } from "../../services/time-calculator";
 import { randomUUID } from "crypto";
 import axios from "axios";
 
+const ENDPOINT = "http://localhost:3000";
+
 describe("HumaansRepository", () => {
-    const repository = new HumaansHRRepository(axios, "token");
+    const repository = new HumaansHRRepository(axios, "token", ENDPOINT);
     const server = setupServer();
     beforeAll(() => server.listen({}));
     beforeEach(() => server.resetHandlers());

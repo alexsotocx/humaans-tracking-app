@@ -19,8 +19,6 @@ import {
 } from "./utils";
 import { AxiosInstance } from "axios";
 
-export const ENDPOINT = "https://app.humaans.io";
-
 export class HumaansHRRepository
     implements
         ITimeTrackingRepository,
@@ -29,7 +27,8 @@ export class HumaansHRRepository
 {
     constructor(
         private readonly axios: AxiosInstance,
-        private readonly token: string
+        private readonly token: string,
+        private readonly endpoint: string
     ) {}
 
     private generateHeaders(): {
@@ -80,7 +79,7 @@ export class HumaansHRRepository
     }
 
     async findEntries(filters: TimeTrackingFilters): Promise<TimeEntry[]> {
-        const url = new URL("/api/timesheet-entries", ENDPOINT);
+        const url = new URL("/api/humaans/timesheet-entries", this.endpoint);
         if (filters.userId) url.searchParams.set("personId", filters.userId);
         if (filters.from) url.searchParams.set("date[$gte]", filters.from);
         if (filters.to) url.searchParams.set("date[$lte]", filters.to);
@@ -102,7 +101,7 @@ export class HumaansHRRepository
     async getCurrentUserProfile(): Promise<Profile> {
         try {
             const response = await this.axios.get<Humaans.Profile>(
-                `${ENDPOINT}/api/me`,
+                `${this.endpoint}/api/humaans/me`,
                 {
                     headers: this.generateHeaders(),
                 }
@@ -130,7 +129,7 @@ export class HumaansHRRepository
         from: string;
         to: string;
     }): Promise<PublicHoliday[]> {
-        const url = new URL("/api/public-holidays", ENDPOINT);
+        const url = new URL("/api/humaans/public-holidays", this.endpoint);
         url.searchParams.set("publicHolidayCalendarId", params.id);
         url.searchParams.set("date[$gte]", params.from);
         url.searchParams.set("date[$lte]", params.to);
@@ -146,7 +145,7 @@ export class HumaansHRRepository
     }
 
     async getTimeOff(params: { userId: string }): Promise<TimeOffEntry[]> {
-        const url = new URL("/api/time-away", ENDPOINT);
+        const url = new URL("/api/humaans/time-away", this.endpoint);
         url.searchParams.set("personId", params.userId);
 
         try {

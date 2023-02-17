@@ -32,7 +32,7 @@ export function extractDatePortion(date: Date): string {
     return date.toISOString().substring(0, 10);
 }
 
-const days = [
+export const daysOrder = [
     Days.Sunday,
     Days.Monday,
     Days.Tuesday,
@@ -44,7 +44,7 @@ const days = [
 
 function mapDateToDay(date: string): Days {
     const dateIndex = new Date(date).getDay();
-    return days[dateIndex];
+    return daysOrder[dateIndex];
 }
 
 function createTotalTime(

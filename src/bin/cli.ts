@@ -34,7 +34,11 @@ async function boostrap(): Promise<void> {
     const results = await calculateFromHumaans({
         workingHoursPerDay: workingDays,
         humaansRepoFactory: (token) =>
-            new HumaansHRRepository(axios.create(), token),
+            new HumaansHRRepository(
+                axios.create(),
+                token,
+                "https://app.humaans.io"
+            ),
         token: token!,
         from: from!,
         to: to!,
