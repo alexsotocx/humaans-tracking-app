@@ -39,7 +39,7 @@ describe("HumaansRepository", () => {
                 }
             );
             const handler = rest.get(
-                `${ENDPOINT}/api/timesheet-entries`,
+                `${ENDPOINT}/api/humaans/timesheet-entries`,
                 (req, res, context) => {
                     return res(
                         context.status(200),
@@ -73,7 +73,7 @@ describe("HumaansRepository", () => {
                 let searchParams: URLSearchParams;
                 server.use(
                     rest.get(
-                        `${ENDPOINT}/api/timesheet-entries`,
+                        `${ENDPOINT}/api/humaans/timesheet-entries`,
                         (req, res, context) => {
                             searchParams = req.url.searchParams;
                             return res(
@@ -102,7 +102,7 @@ describe("HumaansRepository", () => {
 
         it("finds the public profile of the user", async () => {
             server.use(
-                rest.get(`${ENDPOINT}/api/me`, (req, res, context) => {
+                rest.get(`${ENDPOINT}/api/humaans/me`, (req, res, context) => {
                     return res(context.status(200), context.json(profile));
                 })
             );
@@ -123,7 +123,7 @@ describe("HumaansRepository", () => {
             );
             server.use(
                 rest.get(
-                    `${ENDPOINT}/api/public-holidays`,
+                    `${ENDPOINT}/api/humaans/public-holidays`,
                     (req, res, context) => {
                         return res(
                             context.status(200),
@@ -155,9 +155,15 @@ describe("HumaansRepository", () => {
                 }
             );
             server.use(
-                rest.get(`${ENDPOINT}/api/time-away`, (req, res, context) => {
-                    return res(context.status(200), context.json(listResponse));
-                })
+                rest.get(
+                    `${ENDPOINT}/api/humaans/time-away`,
+                    (req, res, context) => {
+                        return res(
+                            context.status(200),
+                            context.json(listResponse)
+                        );
+                    }
+                )
             );
 
             const response = await repository.getTimeOff({

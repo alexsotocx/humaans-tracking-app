@@ -84,15 +84,18 @@ function findExpectedWorkingTime(params: {
         if (matchingEntry) {
             if (
                 matchingEntry === entry.startDate &&
-                entry.startDatePeriod !== "full"
-            )
+                entry.startDatePeriod === "pm"
+            ) {
                 return expectedWorkHours / 2;
+            }
 
             if (
                 matchingEntry === entry.endDate &&
-                entry.startDatePeriod !== "full"
-            )
+                entry.endDatePeriod === "am"
+            ) {
                 return expectedWorkHours / 2;
+            }
+
             return 0;
         }
     }

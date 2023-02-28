@@ -9,6 +9,7 @@ import {
     ONE_HOUR_MS,
 } from "./time-calculator";
 import { randomUUID } from "crypto";
+import Dayjs from "dayjs";
 
 describe("timeUtils", () => {
     const february2_8AM = new Date("2023-02-02T08:00:00.000Z");
@@ -313,6 +314,55 @@ describe("timeUtils", () => {
                 expect(workingTime.missing).toEqual({ hours: 0, minutes: 0 });
                 expect(workingTime.expected).toEqual({ hours: 0, minutes: 0 });
                 expect(workingTime.extra).toEqual({ hours: 0, minutes: 0 });
+            });
+
+            describe("with a half day", () => {
+                it("The expected time is reduced to half", () => {
+                    const wednesday1Feb = Dayjs(february2_8AM)
+                        .subtract(1, "days")
+                        .toDate();
+                    const friday = Dayjs(february2_8AM).add(1, "days").toDate();
+                    const response = calculateTime({
+                        timeEntries: [],
+                        workingHoursPerDay: {
+                            [Days.Thursday]: 8,
+                            [Days.Friday]: 8,
+                            [Days.Wednesday]: 8,
+                        },
+                        holidays: [
+                            {
+                                endDate: extractDatePortion(wednesday1Feb),
+                                endDatePeriod: "am",
+                                startDate: extractDatePortion(friday),
+                                startDatePeriod: "pm",
+                                id: randomUUID(),
+                                publicHolidaysCalendarID: randomUUID(),
+                            },
+                        ],
+                        publicHolidays: [],
+                        startingDate: extractDatePortion(wednesday1Feb),
+                        endDate: extractDatePortion(february2_8AM),
+                    });
+
+                    const workingTime =
+                        response.workedTimePerDay[
+                            extractDatePortion(february2_8AM)
+                        ];
+
+                    expect(workingTime.totalWorked).toEqual({
+                        hours: 0,
+                        minutes: 0,
+                    });
+                    expect(workingTime.missing).toEqual({
+                        hours: 8,
+                        minutes: 0,
+                    });
+                    expect(workingTime.expected).toEqual({
+                        hours: 8,
+                        minutes: 0,
+                    });
+                    expect(workingTime.extra).toEqual({ hours: 0, minutes: 0 });
+                });
             });
         });
     });
