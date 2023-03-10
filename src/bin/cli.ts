@@ -1,7 +1,7 @@
-import { calculateFromHumaans } from "../services/calculate-from-humaans";
+import { calculateFromHumaans } from "../services/humaans/calculate-from-humaans";
 import { Days } from "../types/models";
 import axios from "axios";
-import { HumaansHRRepository } from "../repositories/humaans/repository";
+import { HumaansHRRepository } from "../services/humaans/repository";
 import fs from "fs/promises";
 
 async function boostrap(): Promise<void> {

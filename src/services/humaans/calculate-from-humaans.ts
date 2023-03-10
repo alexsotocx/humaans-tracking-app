@@ -1,5 +1,5 @@
-import { CalculatedTime, calculateTime } from "./time-calculator";
-import { HumaansHRRepository } from "../repositories/humaans/repository";
+import { CalculatedTime, calculateTime } from "../../use-cases/time-calculator";
+import { HumaansHRRepository } from "./repository";
 
 export async function calculateFromHumaans(params: {
     from: string;

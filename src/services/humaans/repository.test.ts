@@ -10,7 +10,7 @@ import {
 import { rest } from "msw";
 import { setupServer } from "msw/node";
 import { Days } from "../../types/models";
-import { extractDatePortion } from "../../services/time-calculator";
+import { extractDatePortion } from "../../use-cases/time-calculator";
 import { randomUUID } from "crypto";
 import axios from "axios";
 

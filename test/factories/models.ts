@@ -1,6 +1,6 @@
 import { Factory } from "rosie";
 import { TimeEntry } from "../../src/types/models";
-import { ONE_HOUR_MS } from "../../src/services/time-calculator";
+import { ONE_HOUR_MS } from "../../src/use-cases/time-calculator";
 
 export const TIME_ENTRY_FACT_NAME = "timeEntry";
 

@@ -1,11 +1,11 @@
 import { Factory, IFactory } from "rosie";
-import { Humaans } from "../../src/repositories/humaans/types";
+import { Humaans } from "../../src/services/humaans/types";
 import { randomUUID } from "crypto";
 import {
     convertToReadableTime,
     extractDatePortion,
-} from "../../src/services/time-calculator";
-import { createDateFromDateTimeStrings } from "../../src/repositories/humaans/utils";
+} from "../../src/use-cases/time-calculator";
+import { createDateFromDateTimeStrings } from "../../src/services/humaans/utils";
 import { Days } from "../../src/types/models";
 
 export const timeEntry = Factory.define<Humaans.TimeTrackingEntry>(

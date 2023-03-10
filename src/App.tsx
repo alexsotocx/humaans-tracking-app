@@ -7,10 +7,10 @@ import {
     daysOrder,
     extractDatePortion,
     ReadableWorkingTime,
-} from "./services/time-calculator";
+} from "./use-cases/time-calculator";
 import Dayjs from "dayjs";
-import { calculateFromHumaans } from "./services/calculate-from-humaans";
-import { HumaansHRRepository } from "./repositories/humaans/repository";
+import { calculateFromHumaans } from "./services/humaans/calculate-from-humaans";
+import { HumaansHRRepository } from "./services/humaans/repository";
 import axios from "axios";
 
 function CalculationSection(calculations: CalculatedTime) {
