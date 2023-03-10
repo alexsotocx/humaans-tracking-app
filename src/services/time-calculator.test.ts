@@ -19,6 +19,10 @@ describe("timeUtils", () => {
         { entryLong: ONE_HOUR_MS * 2 }
     );
 
+    it("should always be UTC", () => {
+        expect(new Date().getTimezoneOffset()).toBe(0);
+    });
+
     describe("extractDatePortion", () => {
         it("returns the date portion of the date object", () => {
             expect(extractDatePortion(february2_8AM)).toEqual("2023-02-02");
@@ -331,37 +335,44 @@ describe("timeUtils", () => {
                         },
                         holidays: [
                             {
-                                endDate: extractDatePortion(wednesday1Feb),
-                                endDatePeriod: "am",
-                                startDate: extractDatePortion(friday),
+                                startDate: extractDatePortion(wednesday1Feb),
                                 startDatePeriod: "pm",
+                                endDatePeriod: "am",
+                                endDate: extractDatePortion(friday),
+
                                 id: randomUUID(),
                                 publicHolidaysCalendarID: randomUUID(),
                             },
                         ],
                         publicHolidays: [],
                         startingDate: extractDatePortion(wednesday1Feb),
-                        endDate: extractDatePortion(february2_8AM),
+                        endDate: extractDatePortion(friday),
                     });
 
-                    const workingTime =
+                    expect(
                         response.workedTimePerDay[
                             extractDatePortion(february2_8AM)
-                        ];
-
-                    expect(workingTime.totalWorked).toEqual({
+                        ].expected
+                    ).toEqual({
                         hours: 0,
                         minutes: 0,
                     });
-                    expect(workingTime.missing).toEqual({
-                        hours: 8,
+                    expect(
+                        response.workedTimePerDay[
+                            extractDatePortion(wednesday1Feb)
+                        ].expected
+                    ).toEqual({
+                        hours: 4,
                         minutes: 0,
                     });
-                    expect(workingTime.expected).toEqual({
-                        hours: 8,
+
+                    expect(
+                        response.workedTimePerDay[extractDatePortion(friday)]
+                            .expected
+                    ).toEqual({
+                        hours: 4,
                         minutes: 0,
                     });
-                    expect(workingTime.extra).toEqual({ hours: 0, minutes: 0 });
                 });
             });
         });

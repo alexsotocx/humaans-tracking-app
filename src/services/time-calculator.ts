@@ -77,10 +77,10 @@ function findExpectedWorkingTime(params: {
     if (isPublicHoliday) return 0;
 
     for (const entry of params.timeOffEntries) {
-        const matchingEntry = getListOfDays(
-            entry.startDate,
-            entry.endDate
-        ).find((holidayDate) => holidayDate === params.date);
+        const holidaysEntries = getListOfDays(entry.startDate, entry.endDate);
+        const matchingEntry = holidaysEntries.find(
+            (holidayDate) => holidayDate === params.date
+        );
         if (matchingEntry) {
             if (
                 matchingEntry === entry.startDate &&
