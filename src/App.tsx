@@ -1,23 +1,22 @@
 import React, { useState } from "react";
 import "./App.css";
-import { Days } from "./types/models";
+import { Profile } from "./types/models";
+import { FormData } from "./Components/FormData";
 import {
     CalculatedTime,
     CalculatedTimeResponse,
     daysOrder,
-    extractDatePortion,
     ReadableWorkingTime,
 } from "./use-cases/time-calculator";
-import Dayjs from "dayjs";
-import { calculateFromHumaans } from "./services/humaans/calculate-from-humaans";
 import { HumaansHRRepository } from "./services/humaans/repository";
-import axios from "axios";
+import { SessionForm } from "./Components/SessionForm";
 
 function CalculationSection(calculations: CalculatedTime) {
     const entries = Object.entries(calculations.workedTimePerDay).sort(
         ([dateA], [dateB]) =>
             new Date(dateB).getTime() - new Date(dateA).getDate()
     );
+
     function renderCalculatedTimeResponse(c: ReadableWorkingTime) {
         let str = "";
         if (c.hours !== 0) str = `${c.hours}h`;
@@ -25,7 +24,19 @@ function CalculationSection(calculations: CalculatedTime) {
         return str.trim();
     }
 
+    function difference(
+        missing: ReadableWorkingTime,
+        extra: ReadableWorkingTime
+    ) {
+        if (missing.minutes || missing.hours)
+            return `- ${renderCalculatedTimeResponse(missing)}`;
+        if (extra.hours || extra.minutes)
+            return `+ ${renderCalculatedTimeResponse(extra)}`;
+        return "";
+    }
+
     function renderRow(date: string, workedData: CalculatedTimeResponse) {
+        const { missing, extra, expected, totalWorked } = workedData;
         return (
             <tr key={date} className={"entry-row"}>
                 <td>
@@ -34,10 +45,9 @@ function CalculationSection(calculations: CalculatedTime) {
                         {daysOrder[new Date(date).getDay()]}
                     </span>
                 </td>
-                <td>{renderCalculatedTimeResponse(workedData.missing)}</td>
-                <td>{renderCalculatedTimeResponse(workedData.totalWorked)}</td>
-                <td>{renderCalculatedTimeResponse(workedData.extra)}</td>
-                <td>{renderCalculatedTimeResponse(workedData.expected)}</td>
+                <td>{renderCalculatedTimeResponse(totalWorked)}</td>
+                <td>{renderCalculatedTimeResponse(expected)}</td>
+                <td>{difference(missing, extra)}</td>
             </tr>
         );
     }
@@ -52,10 +62,9 @@ function CalculationSection(calculations: CalculatedTime) {
                 <thead>
                     <tr>
                         <th>Date</th>
-                        <th>Missing Hours</th>
                         <th>Total worked</th>
-                        <th>Extra time</th>
                         <th>Expected</th>
+                        <th>Difference</th>
                     </tr>
                 </thead>
                 <tbody>{entriesComponent}</tbody>
@@ -66,10 +75,9 @@ function CalculationSection(calculations: CalculatedTime) {
                 <thead>
                     <tr>
                         <th>Date</th>
-                        <th>Missing Hours</th>
                         <th>Total worked</th>
-                        <th>Extra time</th>
                         <th>Expected</th>
+                        <th>Difference</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -84,101 +92,48 @@ function CalculationSection(calculations: CalculatedTime) {
 }
 
 function InputForm() {
-    const [token, setToken] = useState("");
-    const [data, setData] = useState<CalculatedTime>();
-    const [calculated, setCalculated] = useState(false);
-    const [fromDate, setFromDate] = useState(
-        extractDatePortion(Dayjs().startOf("month").toDate())
-    );
-    const [toDate, setToDate] = useState(
-        extractDatePortion(Dayjs().endOf("month").toDate())
+    const [data, setData] = useState<CalculatedTime | null>(null);
+    const [loggedIn, setLoggedIn] = useState(false);
+    const [users, setUsers] = useState([] as Profile[]);
+    const [currentUser, setCurrentUser] = useState<null | Profile>(null);
+    const [repository, setRepository] = useState<null | HumaansHRRepository>(
+        null
     );
 
-    const workingDays: Record<string, number> = {
-        [Days.Monday]: 8,
-        [Days.Tuesday]: 8,
-        [Days.Wednesday]: 8,
-        [Days.Thursday]: 8,
-        [Days.Friday]: 8,
-    };
+    let calculationSection = data ? CalculationSection(data) : null;
 
-    async function handleClick() {
-        try {
-            const data = await calculateFromHumaans({
-                token,
-                from: fromDate,
-                to: toDate,
-                humaansRepoFactory: (token) =>
-                    new HumaansHRRepository(
-                        axios.create(),
-                        token,
-                        "http://localhost:3000"
-                    ),
-                workingHoursPerDay: workingDays,
-            });
-
-            setData(data);
-            setCalculated(true);
-        } catch (e: any) {
-            console.error(e);
-            alert(`Error ${e.message}`);
-        }
+    function logIn(
+        users: Profile[],
+        currentUser: Profile,
+        repo: HumaansHRRepository
+    ) {
+        setLoggedIn(true);
+        setUsers(users);
+        setCurrentUser(currentUser);
+        setRepository(repo);
     }
-
-    let calculationSection = calculated ? CalculationSection(data!) : null;
 
     return (
         <div className="container-fluid">
-            <div className="row">
-                <div className="col-auto">
-                    <label htmlFor="tokenInput" className="form-label">
-                        Token
-                    </label>
-                    <input
-                        className="form-control"
-                        name="tokenInput"
-                        id="tokenInput"
-                        type="text"
-                        placeholder="Humaans Token"
-                        value={token}
-                        onChange={(e) => setToken(e.target.value)}
+            <SessionForm
+                logInCb={logIn}
+                reset={() => {
+                    setUsers([]);
+                    setCurrentUser(null);
+                    setLoggedIn(false);
+                    setData(null);
+                }}
+            ></SessionForm>
+            <div>
+                {loggedIn ? (
+                    <FormData
+                        repository={repository!}
+                        users={users}
+                        currentUser={currentUser!}
+                        calculationCb={(data: CalculatedTime) => setData(data)}
                     />
-                </div>
-                <div className="col-auto">
-                    <label htmlFor="fromDate" className="form-label">
-                        Start date
-                    </label>
-                    <input
-                        className="form-control"
-                        name="fromDate"
-                        id="fromDate"
-                        type="date"
-                        value={fromDate}
-                        placeholder={fromDate}
-                        onChange={(e) => setFromDate(e.target.value)}
-                    />
-                </div>
-                <div className="col-auto">
-                    <label htmlFor="toDate" className="form-label">
-                        End date
-                    </label>
-                    <input
-                        className="form-control"
-                        name="toDate"
-                        id="toDate"
-                        type="date"
-                        value={toDate}
-                        placeholder={toDate}
-                        onChange={(e) => setToDate(e.target.value)}
-                    />
-                </div>
-                <div className="col-auto">
-                    <button onClick={handleClick} className="btn btn-primary">
-                        Calculate
-                    </button>
-                </div>
+                ) : null}
             </div>
-
             <div>{calculationSection}</div>
         </div>
     );

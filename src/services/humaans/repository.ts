@@ -158,4 +158,16 @@ export class HumaansHRRepository
             throw e;
         }
     }
+
+    async getUsers(): Promise<Profile[]> {
+        const url = new URL("/api/humaans/people", this.endpoint);
+
+        try {
+            const data = await this.loopThroughPagination<Humaans.Profile>(url);
+            return data.map(convertToProfile);
+        } catch (e) {
+            console.error(e);
+            throw e;
+        }
+    }
 }

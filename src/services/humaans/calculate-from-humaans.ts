@@ -1,23 +1,24 @@
 import { CalculatedTime, calculateTime } from "../../use-cases/time-calculator";
 import { HumaansHRRepository } from "./repository";
+import { Profile } from "../../types/models";
 
 export async function calculateFromHumaans(params: {
+    user: Profile;
     from: string;
     to: string;
     workingHoursPerDay: Record<string, number>;
-    token: string;
-    humaansRepoFactory: (token: string) => HumaansHRRepository;
+    repository: HumaansHRRepository;
 }): Promise<CalculatedTime> {
-    const repository = params.humaansRepoFactory(params.token);
-    const currentUser = await repository.getCurrentUserProfile();
+    const { repository, user } = params;
+
     const timeEntries = await repository.findEntries({
         from: params.from,
-        userId: currentUser.id,
+        userId: user.id,
         to: params.to,
     });
 
     const timeOffEntries = await repository.getTimeOff({
-        userId: currentUser.id,
+        userId: user.id,
     });
 
     const publicHolidays = await repository.getPublicHolidays({
@@ -25,8 +26,8 @@ export async function calculateFromHumaans(params: {
         to: params.to,
         id:
             timeOffEntries[0]?.publicHolidaysCalendarID ||
-            currentUser.region ||
-            currentUser.country,
+            user.region ||
+            user.country,
     });
 
     return calculateTime({
