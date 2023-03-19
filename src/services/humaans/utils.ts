@@ -65,5 +65,6 @@ export function convertToTimeOffEntry(
         startDate: jsonTimeOff.startDate,
         endDatePeriod: jsonTimeOff.endPeriod,
         publicHolidaysCalendarID: jsonTimeOff.publicHolidayCalendarId,
+        type: jsonTimeOff.type,
     };
 }

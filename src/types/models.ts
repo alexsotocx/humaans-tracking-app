@@ -28,6 +28,7 @@ export type TimeOffEntry = {
     startDatePeriod: "full" | "pm" | "am";
     endDatePeriod: "full" | "pm" | "am";
     publicHolidaysCalendarID: string;
+    type: string;
 };
 
 export type Profile = {

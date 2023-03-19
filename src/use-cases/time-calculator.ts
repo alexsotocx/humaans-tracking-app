@@ -5,7 +5,9 @@ export const ONE_DAY_MS = ONE_HOUR_MS * 24;
 
 export type WorkingHoursPerDay = Record<string, number | undefined>;
 export type ReadableWorkingTime = { hours: number; minutes: number };
+
 export type CalculatedTimeResponse = {
+    remark: string | null;
     expected: ReadableWorkingTime;
     totalWorked: ReadableWorkingTime;
     missing: ReadableWorkingTime;
@@ -49,7 +51,8 @@ function mapDateToDay(date: string): Days {
 
 function createTotalTime(
     expected: number,
-    worked: number
+    worked: number,
+    remark: string | null
 ): CalculatedTimeResponse {
     const difference = expected - worked;
     const empty = { hours: 0, minutes: 0 };
@@ -59,6 +62,7 @@ function createTotalTime(
         extra: difference < 0 ? convertToReadableTime(difference * -1) : empty,
         expected: convertToReadableTime(expected),
         totalWorked: convertToReadableTime(worked),
+        remark: remark,
     };
 }
 
@@ -67,14 +71,14 @@ function findExpectedWorkingTime(params: {
     workingHoursPerDay: WorkingHoursPerDay;
     publicHolidays: PublicHoliday[];
     timeOffEntries: TimeOffEntry[];
-}): number {
+}): { expected: number; remark: string | null } {
     const expectedWorkHours =
         (params.workingHoursPerDay[mapDateToDay(params.date)] || 0) *
         ONE_HOUR_MS;
     const isPublicHoliday = params.publicHolidays.some(
         (p) => p.date === params.date
     );
-    if (isPublicHoliday) return 0;
+    if (isPublicHoliday) return { remark: "public_holiday", expected: 0 };
 
     for (const entry of params.timeOffEntries) {
         const holidaysEntries = getListOfDays(entry.startDate, entry.endDate);
@@ -82,25 +86,24 @@ function findExpectedWorkingTime(params: {
             (holidayDate) => holidayDate === params.date
         );
         if (matchingEntry) {
-            if (
+            const halfDayAfternoon =
                 matchingEntry === entry.startDate &&
-                entry.startDatePeriod === "pm"
-            ) {
-                return expectedWorkHours / 2;
+                entry.startDatePeriod === "pm";
+            const halfDayMorning =
+                matchingEntry === entry.endDate && entry.endDatePeriod === "am";
+
+            if (halfDayMorning || halfDayAfternoon) {
+                return {
+                    expected: expectedWorkHours / 2,
+                    remark: entry.type,
+                };
             }
 
-            if (
-                matchingEntry === entry.endDate &&
-                entry.endDatePeriod === "am"
-            ) {
-                return expectedWorkHours / 2;
-            }
-
-            return 0;
+            return { remark: entry.type, expected: 0 };
         }
     }
 
-    return expectedWorkHours;
+    return { expected: expectedWorkHours, remark: null };
 }
 
 export function getListOfDays(startDate: string, endDate: string): string[] {
@@ -147,6 +150,7 @@ export function calculateTime(param: {
         {
             expected: number;
             total: number;
+            remark: string | null;
         }
     > = {};
 
@@ -158,14 +162,17 @@ export function calculateTime(param: {
             );
         }, 0);
 
+        const { expected, remark } = findExpectedWorkingTime({
+            date: day,
+            workingHoursPerDay: param.workingHoursPerDay,
+            timeOffEntries: param.holidays,
+            publicHolidays: param.publicHolidays,
+        });
+
         workedTimePerDay[day] = {
-            expected: findExpectedWorkingTime({
-                date: day,
-                workingHoursPerDay: param.workingHoursPerDay,
-                timeOffEntries: param.holidays,
-                publicHolidays: param.publicHolidays,
-            }),
+            expected,
             total: totalWorked,
+            remark,
         };
     });
 
@@ -178,14 +185,14 @@ export function calculateTime(param: {
 
     return {
         workedTimePerDay: Object.entries(workedTimePerDay).reduce(
-            (res, [day, { expected, total }]) => {
-                res[day] = createTotalTime(expected, total);
+            (res, [day, { expected, total, remark }]) => {
+                res[day] = createTotalTime(expected, total, remark);
                 return res;
             },
             {} as Record<string, CalculatedTimeResponse>
         ),
         minimumEntryDate: param.startingDate,
         maximumEntryDate: param.endDate,
-        total: createTotalTime(totalExpected, totalWorked),
+        total: createTotalTime(totalExpected, totalWorked, null),
     };
 }

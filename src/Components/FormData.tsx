@@ -54,58 +54,62 @@ export function FormData({
     }
 
     return (
-        <div className="row">
-            <div className="col-auto">
-                <label className="form-label">User</label>
-                <select
-                    value={selectedUser.id}
-                    onChange={(e) =>
-                        setSelectedUser(
-                            users.find((u) => u.id === e.target.value)!
-                        )
-                    }
-                    className="form-select"
-                >
-                    {users.map((u) => (
-                        <option value={u.id} key={u.id}>
-                            {u.firstName} {u.lastName}{" "}
-                            {currentUser.id === u.id ? "- Me" : ""}
-                        </option>
-                    ))}
-                </select>
+        <div>
+            <div className="row">
+                <div className="col-auto">
+                    <label className="form-label">User</label>
+                    <select
+                        value={selectedUser.id}
+                        onChange={(e) =>
+                            setSelectedUser(
+                                users.find((u) => u.id === e.target.value)!
+                            )
+                        }
+                        className="form-select"
+                    >
+                        {users.map((u) => (
+                            <option value={u.id} key={u.id}>
+                                {u.firstName} {u.lastName}{" "}
+                                {currentUser.id === u.id ? "- Me" : ""}
+                            </option>
+                        ))}
+                    </select>
+                </div>
+                <div className="col-auto">
+                    <label htmlFor="fromDate" className="form-label">
+                        Start date
+                    </label>
+                    <input
+                        className="form-control"
+                        name="fromDate"
+                        id="fromDate"
+                        type="date"
+                        value={fromDate}
+                        placeholder={fromDate}
+                        onChange={(e) => setFromDate(e.target.value)}
+                    />
+                </div>
+                <div className="col-auto">
+                    <label htmlFor="toDate" className="form-label">
+                        End date
+                    </label>
+                    <input
+                        className="form-control"
+                        name="toDate"
+                        id="toDate"
+                        type="date"
+                        value={toDate}
+                        placeholder={toDate}
+                        onChange={(e) => setToDate(e.target.value)}
+                    />
+                </div>
             </div>
-            <div className="col-auto">
-                <label htmlFor="fromDate" className="form-label">
-                    Start date
-                </label>
-                <input
-                    className="form-control"
-                    name="fromDate"
-                    id="fromDate"
-                    type="date"
-                    value={fromDate}
-                    placeholder={fromDate}
-                    onChange={(e) => setFromDate(e.target.value)}
-                />
-            </div>
-            <div className="col-auto">
-                <label htmlFor="toDate" className="form-label">
-                    End date
-                </label>
-                <input
-                    className="form-control"
-                    name="toDate"
-                    id="toDate"
-                    type="date"
-                    value={toDate}
-                    placeholder={toDate}
-                    onChange={(e) => setToDate(e.target.value)}
-                />
-            </div>
-            <div className="col-auto">
-                <button onClick={handleClick} className="btn btn-primary">
-                    Calculate
-                </button>
+            <div className="row">
+                <div className="col-auto">
+                    <button onClick={handleClick} className="btn btn-primary">
+                        Calculate
+                    </button>
+                </div>
             </div>
         </div>
     );

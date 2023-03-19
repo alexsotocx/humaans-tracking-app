@@ -69,6 +69,7 @@ export const timeOffEntry = Factory.define<Humaans.TimeOffEntry>(
     .attr("startDate", extractDatePortion(new Date()))
     .attr("startPeriod", "full")
     .attr("endDate", extractDatePortion(new Date()))
+    .attr("type", "pto")
     .attr("endPeriod", "full");
 
 export const publicHoliday = Factory.define<Humaans.PublicHoliday>(

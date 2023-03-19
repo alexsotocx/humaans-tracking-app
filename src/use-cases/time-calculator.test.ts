@@ -259,6 +259,7 @@ describe("timeUtils", () => {
                                 startDatePeriod: "full",
                                 publicHolidaysCalendarID: randomUUID(),
                                 id: randomUUID(),
+                                type: "pto",
                             },
                         ],
                         publicHolidays: [],
@@ -299,6 +300,7 @@ describe("timeUtils", () => {
                             startDatePeriod: "full",
                             id: randomUUID(),
                             publicHolidaysCalendarID: randomUUID(),
+                            type: "pto",
                         },
                     ],
                     publicHolidays: [],
@@ -342,6 +344,7 @@ describe("timeUtils", () => {
 
                                 id: randomUUID(),
                                 publicHolidaysCalendarID: randomUUID(),
+                                type: "pto",
                             },
                         ],
                         publicHolidays: [],

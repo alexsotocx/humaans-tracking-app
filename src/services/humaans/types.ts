@@ -49,5 +49,6 @@ export namespace Humaans {
         startPeriod: "full" | "pm";
         endPeriod: "full" | "am";
         publicHolidayCalendarId: string;
+        type: string;
     };
 }

@@ -39,6 +39,7 @@ function CalculationSection(calculations: CalculatedTime) {
         const { missing, extra, expected, totalWorked } = workedData;
         return (
             <tr key={date} className={"entry-row"}>
+                <td>{workedData.remark ?? ""}</td>
                 <td>
                     {date} -{" "}
                     <span className="text-capitalize">
@@ -57,10 +58,42 @@ function CalculationSection(calculations: CalculatedTime) {
     );
     return (
         <div className="calculations">
+            <div className="overview">
+                <h2>Total in period</h2>
+
+                <ul className="list-group">
+                    <li className="list-group-item">
+                        <strong>Total Worked:</strong>{" "}
+                        {renderCalculatedTimeResponse(
+                            calculations.total.totalWorked
+                        )}
+                    </li>
+                    <li className="list-group-item">
+                        <strong>Expected:</strong>{" "}
+                        {renderCalculatedTimeResponse(
+                            calculations.total.expected
+                        )}
+                    </li>
+                    {difference(
+                        calculations.total.missing,
+                        calculations.total.extra
+                    ) !== "" ? (
+                        <li className="list-group-item">
+                            <strong>Difference:</strong>{" "}
+                            {difference(
+                                calculations.total.missing,
+                                calculations.total.extra
+                            )}
+                        </li>
+                    ) : null}
+                </ul>
+            </div>
+
             <h2>Work entries</h2>
             <table className="table table-hover">
                 <thead>
                     <tr>
+                        <th>Remark</th>
                         <th>Date</th>
                         <th>Total worked</th>
                         <th>Expected</th>
@@ -68,24 +101,6 @@ function CalculationSection(calculations: CalculatedTime) {
                     </tr>
                 </thead>
                 <tbody>{entriesComponent}</tbody>
-            </table>
-
-            <h2>Total in period</h2>
-            <table className="table table-hover">
-                <thead>
-                    <tr>
-                        <th>Date</th>
-                        <th>Total worked</th>
-                        <th>Expected</th>
-                        <th>Difference</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {renderRow(
-                        calculations.maximumEntryDate,
-                        calculations.total
-                    )}
-                </tbody>
             </table>
         </div>
     );
