@@ -90,7 +90,6 @@ export class HumaansHRRepository
                     url
                 );
             return data
-                .filter((d) => d.endTime !== null)
                 .map(convertToTimeEntry);
         } catch (e) {
             console.error(e);

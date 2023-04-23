@@ -178,7 +178,7 @@ export function calculateTime(param: {
 
     let totalWorked = 0;
     let totalExpected = 0;
-    Object.entries(workedTimePerDay).forEach(([day, { expected, total }]) => {
+    Object.entries(workedTimePerDay).forEach(([_day, { expected, total }]) => {
         totalExpected += expected;
         totalWorked += total;
     });
