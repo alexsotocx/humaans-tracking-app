@@ -23,7 +23,7 @@ export function FormData({
         extractDatePortion(Dayjs().startOf("month").toDate())
     );
     const [toDate, setToDate] = useState(
-        extractDatePortion(Dayjs().endOf("month").toDate())
+        extractDatePortion(Dayjs().toDate())
     );
 
     const [selectedUser, setSelectedUser] = React.useState(currentUser);
