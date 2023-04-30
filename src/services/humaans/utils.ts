@@ -19,7 +19,7 @@ export function createDateFromDateTimeStrings(
 export function convertToTimeEntry(entry: TimeTrackingEntry): TimeEntry {
     return {
         date: entry.date,
-        endTime: createDateFromDateTimeStrings(entry.date, entry.endTime),
+        endTime: entry.endTime ?  createDateFromDateTimeStrings(entry.date, entry.endTime) : null,
         startTime: createDateFromDateTimeStrings(entry.date, entry.startTime),
         createdAt: new Date(entry.createdAt),
         id: entry.id,

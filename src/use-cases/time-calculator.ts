@@ -143,8 +143,8 @@ export function calculateTime(param: {
     workingHoursPerDay: WorkingHoursPerDay;
     timeEntries: TimeEntry[];
 }): CalculatedTime {
-    const timeEntriesPerDay = groupTimeEntriesPerDay(param.timeEntries);
-
+    
+    const timeEntriesPerDay = groupTimeEntriesPerDay(param.timeEntries.filter(t => t.endTime !== null));
     const workedTimePerDay: Record<
         string,
         {

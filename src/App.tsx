@@ -152,7 +152,7 @@ function InputForm() {
           />
         ) : null}
       </div>
-      <div><CurrentDay repo={repository!} user={currentUser!}></CurrentDay></div>
+      <div>{ data ? <CurrentDay repo={repository!} user={currentUser!}></CurrentDay> : null }</div>
       <div>{calculationSection}</div>
     </div>
   );

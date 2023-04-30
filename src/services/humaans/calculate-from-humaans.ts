@@ -15,7 +15,7 @@ export async function calculateFromHumaans(params: {
         from: params.from,
         userId: user.id,
         to: params.to,
-    });
+    }).then(entries => entries.filter(e => e.endTime != null));
 
     const timeOffEntries = await repository.getTimeOff({
         userId: user.id,
